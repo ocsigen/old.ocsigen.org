@@ -1,0 +1,103 @@
+/* This stylesheet defines colors and images for eliom */
+
+body {
+  background-image: url(resources/bg-eliom.jpg);
+  background-color: #f4fce7;
+}
+
+a {
+  color: #6eb630;
+}
+
+ul.puces {
+  list-style-image: url(resources/puce-eliom.png);
+}
+
+.puce:before {
+  content: url(resources/puce-eliom.png);
+}
+
+div.contenu {
+  box-shadow: 0 0 6px 2px #acbccb;
+}
+
+ul.projectsmenu {
+  box-shadow: 1px 2px 2px 2px #acbccb;
+}
+
+.projectsmenu li.eliomtools_current a {
+  text-shadow: 1px 1px 1px #448;
+
+  background-color: #6eb630; /* fallback color if gradients are not supported */
+  background-image: -webkit-linear-gradient(top, #6eb630, #c1d118);
+  background-image:    -moz-linear-gradient(top, #6eb630, #c1d118);
+  background-image:     -ms-linear-gradient(top, #6eb630, #c1d118);
+  background-image:      -o-linear-gradient(top, #6eb630, #c1d118);
+  background-image:         linear-gradient(top, #6eb630, #c1d118);
+}
+
+
+div.leftbox {
+/*  box-shadow: -1px -1px 2px 2px #aabb13 inset; */
+/*  background-image:         linear-gradient(left, #6eb630 50%, #c1d118); */
+
+  background-color: #6eb630; /* fallback color if gradients are not supported */
+
+  box-shadow: 0 0 2px 2px #bbb;
+
+  background-image: -webkit-radial-gradient(180px 0, circle farthest-side, rgba(187, 207, 25, 1) 0%, rgba(187, 207, 25, 0) 100%),
+                    -webkit-linear-gradient(top, #6eb630, #225511);
+  background-image: -moz-radial-gradient(180px 0, circle farthest-side, rgba(187, 207, 25, 1) 0%, rgba(187, 207, 25, 0) 100%),
+                    -moz-linear-gradient(top, #6eb630, #225511);
+  background-image: -ms-radial-gradient(180px 0, circle farthest-side, rgba(187, 207, 25, 1) 0%, rgba(187, 207, 25, 0) 100%),
+                    -ms-linear-gradient(top, #6eb630, #225511);
+  background-image: -o-radial-gradient(180px 0, circle farthest-side, rgba(187, 207, 25, 1) 0%, rgba(187, 207, 25, 0) 100%),
+                    -o-linear-gradient(top, #6eb630, #225511);
+  background-image: radial-gradient(180px 0, circle farthest-side, rgba(187, 207, 25, 1) 0%, rgba(187, 207, 25, 0) 100%),
+                    linear-gradient(top, #6eb630, #225511);
+}
+
+div.leftbox#leftboxdoc:before {
+  content: url(resources/Help-icon-mini.png);
+}
+
+div.leftbox#leftboxdownload:before {
+  content: url(resources/download-icon-mini.png);
+}
+
+div.banner:before {
+  content: url(resources/logo-eliom-ombre.png);
+}
+
+div.banner {
+  background-image: url(resources/banniere-eliom.png);
+  box-shadow: -1px -1px 1px 1px #64a62c inset;
+}
+
+div.banner span.banner {
+  text-shadow: 1px 1px 1px #585;
+}
+
+div.colprincipale h2, div.colprincipale h3 {
+  color: #8dbf24;
+}
+
+div.colprincipale h1 {
+  background-color: #8dbf24;
+}
+
+div.concepts {
+  background-color: #8dbf24;
+}
+
+div.encadre {
+  border-color: #8dbf24;
+}
+
+div.encadre h4 {
+  background-color: #8dbf24;
+}
+
+ul.doctree.eliomtools_level0 ul {
+  border-left-color: #8dbf24;
+}

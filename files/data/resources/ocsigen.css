@@ -1,0 +1,102 @@
+/* This stylesheet defines the colors and images for the main site 
+   and "non-colored" projects.
+ */
+
+body {
+  background-image: url(resources/bg.jpg);
+  background-color: #f1f1f1;
+}
+
+a {
+  color: #0ca9dc;
+}
+
+h1 { /* Only for the main site */
+  top: -120px;
+}
+
+ul.puces {
+  list-style-image: url(resources/puce.png);
+}
+
+.puce:before {
+  content: url(resources/puce.png);
+}
+
+div.contenu {
+  box-shadow: 0 0 4px 1px #acbccb;
+}
+
+ul.projectsmenu {
+  box-shadow: 1px 3px 3px 2px #acbccb;
+}
+
+.projectsmenu li.eliomtools_current a {
+  text-shadow: 1px 1px 1px #448;
+
+  background-color: #07ace2; /* fallback color if gradients are not supported */
+  background-image: -webkit-linear-gradient(top, #017cc2, #07ace2);
+  background-image:    -moz-linear-gradient(top, #017cc2, #07ace2);
+  background-image:     -ms-linear-gradient(top, #017cc2, #07ace2);
+  background-image:      -o-linear-gradient(top, #017cc2, #07ace2);
+  background-image:         linear-gradient(top, #017cc2, #07ace2);
+}
+
+
+div.leftbox {
+
+  background-color: #07ace2; /* fallback color if gradients are not supported */
+
+/*  background-image: -webkit-linear-gradient(left, #0173b9, #06ade4 50%);
+  background-image:    -moz-linear-gradient(left, #0173b9, #06ade4 50%);
+  background-image:     -ms-linear-gradient(left, #0173b9, #06ade4 50%);
+  background-image:      -o-linear-gradient(left, #0173b9, #06ade4 50%);
+  background-image:         linear-gradient(left, #0173b9, #06ade4 50%);
+*/
+
+  box-shadow: 0 0 2px 2px #bbb;
+/* encore plus classe :
+  box-shadow: inset 0 0 1px 1px #58c9e7, 1px 1px 1px 1px #bbb;
+  border: 1px solid #015f88;
+  border-left-style: none;
+*/
+
+  background-image: -webkit-radial-gradient(180px 0, circle farthest-side, rgba(10, 192, 237, 1) 0%, rgba(10, 192, 237, 0) 150%),
+                    -webkit-linear-gradient(top, #017cc2, #005094);
+  background-image: -moz-radial-gradient(180px 0, circle farthest-side, rgba(10, 192, 237, 1) 0%, rgba(10, 192, 237, 0) 150%),
+                    -moz-linear-gradient(top, #017cc2, #005094);
+  background-image: -ms-radial-gradient(180px 0, circle farthest-side, rgba(10, 192, 237, 1) 0%, rgba(10, 192, 237, 0) 150%),
+                    -ms-linear-gradient(top, #017cc2, #005094);
+  background-image: -o-radial-gradient(180px 0, circle farthest-side, rgba(10, 192, 237, 1) 0%, rgba(10, 192, 237, 0) 150%),
+                    -o-linear-gradient(top, #017cc2, #005094);
+  background-image: radial-gradient(180px 0, circle farthest-side, rgba(10, 192, 237, 1) 0%, rgba(10, 192, 237, 0) 150%),
+                    linear-gradient(top, #017cc2, #005094);
+
+}
+
+div.leftbox#leftboxdoc:before {
+  content: url(resources/Help-icon-mini.png);
+}
+
+div.leftbox#leftboxdownload:before {
+  content: url(resources/download-icon-mini.png);
+}
+
+div.banner:before {
+  content: url(resources/logo-ocsigen-ombre.png);
+}
+
+div.banner:after {
+  position: absolute;
+  right: 30px;
+  top: 25px;
+  content: url(resources/ocsigen-blanc-moyen.png);
+  opacity: 0.8;
+}
+
+div.banner {
+  background-image: url(resources/banniere-ocsigen.png);
+  box-shadow: -1px -1px 1px 1px #0580a9 inset;
+  text-shadow: 1px 1px 1px #558;
+}
+

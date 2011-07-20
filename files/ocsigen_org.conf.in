@@ -1,0 +1,41 @@
+<ocsigen>
+
+  <server>
+
+    <port>%%PORT%%</port>
+
+    <logdir>%%SRC%%/local/var/log</logdir>
+    <datadir>%%SRC%%/local/var/run</datadir>
+    <commandpipe>%%SRC%%/local/var/run/ocsigenserver_command</commandpipe>
+
+    <charset>utf-8</charset>
+
+    <debugmode/>
+
+    <extension findlib-package="ocsigenserver.ext.staticmod"/>
+    <extension findlib-package="ocsigenserver.ext.accesscontrol"/>
+    <extension findlib-package="ocsigenserver.ext.ocsipersist-dbm">
+      <store dir="%%SRC%%/local/var/lib/ocsidbm/"/>
+    </extension>
+
+    <extension findlib-package="ocsimore"/>
+    <extension findlib-package="ocsimore.wiki"/>
+    <extension findlib-package="ocsimore.forum"/>
+
+    <host hostfilter="*">
+      <static dir="%%SRC%%/%%JSDIR%%" />
+      <eliom findlib-package="ocsimore.site">
+        <admin staticdir="%%SRC%%/local/var/www/ocsimore_static" />
+      </eliom>
+      <eliom findlib-package="ocsimore.user_site">
+	<notsecure/>
+	<pam/>
+      </eliom>
+      <eliom findlib-package="ocsimore.wiki_site" />
+      <eliom findlib-package="ocsimore.forum_site" />
+      <eliom module="%%SRC%%/%%LIBDIR%%/%%APPNAME%%.cma" />
+    </host>
+
+  </server>
+
+</ocsigen>

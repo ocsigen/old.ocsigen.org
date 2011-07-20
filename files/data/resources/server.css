@@ -1,0 +1,86 @@
+/* This stylesheet defines the colors and images for the main site 
+   and "non-colored" projects.
+ */
+
+body {
+  background-image: url(resources/bg-server.jpg);
+  background-color: #fcf1ef;
+}
+
+a {
+  color: #d02526;
+}
+
+ul.puces {
+  list-style-image: url(resources/puce-server.png);
+}
+
+.puce:before {
+  content: url(resources/puce-server.png);
+}
+
+div.contenu {
+  box-shadow: 0 0 6px 2px #c4bab3;
+}
+
+ul.projectsmenu {
+  box-shadow: 1px 3px 3px 2px #acbccb;
+}
+
+.projectsmenu li.eliomtools_current a {
+  text-shadow: 1px 1px 1px #448;
+
+  background-color: #d02526; /* fallback color if gradients are not supported */
+  background-image: -webkit-linear-gradient(top, #d02526, #ff6e71);
+  background-image:    -moz-linear-gradient(top, #d02526, #ff6e71);
+  background-image:     -ms-linear-gradient(top, #d02526, #ff6e71);
+  background-image:      -o-linear-gradient(top, #d02526, #ff6e71);
+  background-image:         linear-gradient(top, #d02526, #ff6e71);
+}
+
+
+div.leftbox {
+/*  box-shadow: -1px -1px 2px 2px #d25b5d inset;
+
+  background-image: -webkit-linear-gradient(left, #d02526 50%, #ff6e71);
+  background-image:    -moz-linear-gradient(left, #d02526 50%, #ff6e71);
+  background-image:     -ms-linear-gradient(left, #d02526 50%, #ff6e71);
+  background-image:      -o-linear-gradient(left, #d02526 50%, #ff6e71);
+  background-image:         linear-gradient(left, #d02526 50%, #ff6e71);
+*/
+
+  box-shadow: 0 0 2px 2px #bbb;
+
+  background-color: #d02526; /* fallback color if gradients are not supported */
+
+  background-image: -webkit-radial-gradient(180px 0, circle farthest-side, rgba(250, 14, 43, 1) 0%, rgba(250, 14, 43, 0) 100%),
+                    -webkit-linear-gradient(top, #dc2f30, #9b151a);
+  background-image: -moz-radial-gradient(180px 0, circle farthest-side, rgba(250, 14, 43, 1) 0%, rgba(250, 14, 43, 0) 100%),
+                    -moz-linear-gradient(top, #dc2f30, #9b151a);
+  background-image: -ms-radial-gradient(180px 0, circle farthest-side, rgba(250, 14, 43, 1) 0%, rgba(250, 14, 43, 0) 100%),
+                    -ms-linear-gradient(top, #dc2f30, #9b151a);
+  background-image: -o-radial-gradient(180px 0, circle farthest-side, rgba(250, 14, 43, 1) 0%, rgba(250, 14, 43, 0) 100%),
+                    -o-linear-gradient(top, #dc2f30, #9b151a);
+  background-image: radial-gradient(180px 0, circle farthest-side, rgba(250, 14, 43, 1) 0%, rgba(250, 14, 43, 0) 100%),
+                    linear-gradient(top, #dc2f30, #9b151a);
+
+}
+
+div.leftbox#leftboxdoc:before {
+  content: url(resources/Help-icon-mini.png);
+}
+
+div.leftbox#leftboxdownload:before {
+  content: url(resources/download-icon-mini.png);
+}
+
+div.banner:before {
+  content: url(resources/logo-server-ombre.png);
+}
+
+div.banner {
+  background-image: url(resources/banniere-server.png);
+  box-shadow: -1px -1px 1px 1px #a61d21 inset;
+  text-shadow: 1px 1px 1px #585;
+}
+

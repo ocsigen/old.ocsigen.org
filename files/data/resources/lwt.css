@@ -1,0 +1,85 @@
+/* This stylesheet defines the colors and images for the main site 
+   and "non-colored" projects.
+ */
+
+body {
+  background-image: url(resources/bg-lwt.jpg);
+  background-color: #fef2e6;
+}
+
+a {
+  color: #cc3c17;
+}
+
+ul.puces {
+  list-style-image: url(resources/puce-lwt.png);
+}
+
+.puce:before {
+  content: url(resources/puce-lwt.png);
+}
+
+div.contenu {
+  box-shadow: 0 0 6px 2px #d6ccc1;
+}
+
+ul.projectsmenu {
+  box-shadow: 1px 3px 3px 2px #acbccb;
+}
+
+.projectsmenu li.eliomtools_current a {
+  text-shadow: 1px 1px 1px #448;
+
+  background-color: #cc3c17; /* fallback color if gradients are not supported */
+  background-image: -webkit-linear-gradient(top, #cc3c17, #e4700d);
+  background-image:    -moz-linear-gradient(top, #cc3c17, #e4700d);
+  background-image:     -ms-linear-gradient(top, #cc3c17, #e4700d);
+  background-image:      -o-linear-gradient(top, #cc3c17, #e4700d);
+  background-image:         linear-gradient(top, #cc3c17, #e4700d);
+}
+
+
+div.leftbox {
+/*  box-shadow: -1px -1px 2px 2px #cf660d inset;
+
+  background-image: -webkit-linear-gradient(left, #cc3c17 50%, #e4700d);
+  background-image:    -moz-linear-gradient(left, #cc3c17 50%, #e4700d);
+  background-image:     -ms-linear-gradient(left, #cc3c17 50%, #e4700d);
+  background-image:      -o-linear-gradient(left, #cc3c17 50%, #e4700d);
+  background-image:         linear-gradient(left, #cc3c17 50%, #e4700d);
+*/
+
+  background-color: #cc3c17; /* fallback color if gradients are not supported */
+
+  box-shadow: 0 0 2px 2px #bbb;
+
+  background-image: -webkit-radial-gradient(180px 0, circle farthest-side, rgba(255, 189, 3, 1) 0%, rgba(255, 189, 3, 0) 100%),
+                    -webkit-linear-gradient(top, #ec8511, #cc3c17);
+  background-image: -moz-radial-gradient(180px 0, circle farthest-side, rgba(255, 189, 3, 1) 0%, rgba(255, 189, 3, 0) 100%),
+                    -moz-linear-gradient(top, #ec8511, #cc3c17);
+  background-image: -ms-radial-gradient(180px 0, circle farthest-side, rgba(255, 189, 3, 1) 0%, rgba(255, 189, 3, 0) 100%),
+                    -ms-linear-gradient(top, #ec8511, #cc3c17);
+  background-image: -o-radial-gradient(180px 0, circle farthest-side, rgba(255, 189, 3, 1) 0%, rgba(255, 189, 3, 0) 100%),
+                    -o-linear-gradient(top, #ec8511, #cc3c17);
+  background-image: radial-gradient(180px 0, circle farthest-side, rgba(255, 189, 3, 1) 0%, rgba(255, 189, 3, 0) 100%),
+                    linear-gradient(top, #ec8511, #cc3c17);
+}
+
+div.leftbox#leftboxdoc:before {
+  content: url(resources/Help-icon-mini.png);
+}
+
+div.leftbox#leftboxdownload:before {
+  content: url(resources/download-icon-mini.png);
+}
+
+div.banner:before {
+  content: url(resources/logo-lwt-ombre.png);
+}
+
+div.banner {
+  background-image: url(resources/banniere-lwt.png);
+  box-shadow: -1px -1px 1px 1px #be5a09 inset;
+  text-shadow: 1px 1px 1px #585;
+}
+
