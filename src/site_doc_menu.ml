@@ -178,6 +178,7 @@ let register name f =
       (try_lwt
 	  f bi args contents
        with
+       | Site_doc.Project_not_found -> Lwt.return []
        | Site_doc.Error msg -> error (Format.sprintf "Error %s: %s" name msg)
        | exc ->
 	 error (Format.sprintf "Error %s: exception %s" name
