@@ -25,95 +25,112 @@ let projects = [
 
   eliom_id,
   [
-   "dev"    , 298l, "services", ["1.91"], Some (2, "Development branch"),
+   "dev"    , "manualTemplate", "services", ["1.91"], Some (2, "Development branch"),
       Some [["server"];["client"]];
-   "1.3-dev", 298l, "intro"   , ["1.3.4";"1.3.3";"1.3.2";"1.3.1";"1.3.0"],
+   "1.3-dev", "manualTemplate", "intro"   , ["1.3.4";"1.3.3";"1.3.2";"1.3.1";"1.3.0"],
      Some (1, "Latest 1.3 (stable)"), None;
-   "1.0-dev", 298l, "intro"   , ["1.1.0";"1.0.0"], None, None;
-   "1.2-dev", 298l, "intro"   , ["1.2.2";"1.2.1";"1.2.0"], None, None;
+   "1.0-dev", "manualTemplate", "intro"   , ["1.1.0";"1.0.0"], None, None;
+   "1.2-dev", "manualTemplate", "intro"   , ["1.2.2";"1.2.1";"1.2.0"], None, None;
   ],
   "1.3.4", (* last stable version *)
-  303l;    (* wikibox unknown version *)
+  "manualUnknownVersion",
+  303l, (* 404 wiki box *)
+  303l; (* 403 wiki box FIXME *)
 
   (** Ocsigen server *)
 
   server_id,
   [
-   "dev"    , 310l, "quickstart", ["1.91"], Some (2, "Development branch"), None;
-   "1.3-dev", 310l, "intro"     , ["1.3.4";"1.3.3";"1.3.2";"1.3.1";"1.3.0"],
+   "dev"    , "manualTemplate", "quickstart", ["1.91"], Some (2, "Development branch"), None;
+   "1.3-dev", "manualTemplate", "intro"     , ["1.3.4";"1.3.3";"1.3.2";"1.3.1";"1.3.0"],
      Some (1, "Latest 1.3 (stable)"), None;
-   "1.2-dev", 310l, "intro"     , ["1.2.2";"1.2.1";"1.2.0"], None, None;
-   "1.0-dev", 310l, "intro"     , ["1.1.0";"1.0.0"], None, None;
+   "1.2-dev", "manualTemplate", "intro"     , ["1.2.2";"1.2.1";"1.2.0"], None, None;
+   "1.0-dev", "manualTemplate", "intro"     , ["1.1.0";"1.0.0"], None, None;
   ],
   "1.3.4", (* last stable version *)
-  311l; (* wikibox unknown version *)
+  "manualUnknownVersion",
+  311l, (* 404 wiki box *)
+  311l; (* 403 wiki box FIXME *)
 
   (** Lwt *)
 
   lwt_id,
   [
-   "dev", 315l, "manual", ["2.3.0";"2.2.1";"2.2.0"], Some (1, "Stable branch"), None;
-   "old", 315l, "manual", ["2.1.1";"2.1.0";"2.0.0";"1.1.0";"1.0.0"], None, None;
+   "dev", "manualTemplate", "manual", ["2.3.0";"2.2.1";"2.2.0"], Some (1, "Stable branch"), None;
+   "old", "manualTemplate", "manual", ["2.1.1";"2.1.0";"2.0.0";"1.1.0";"1.0.0"], None, None;
   ],
   "2.3.0", (* last stable version *)
-  317l;    (* wikibox unknown version *)
+  "manualUnknownVersion",
+  317l, (* 404 wiki box *)
+  317l; (* 403 wiki box FIXME *)
 
   (** Js_of_ocaml *)
 
   js_of_ocaml_id,
   [
-   "dev", 323l, "intro", ["1.0.2";"1.0.1";"1.0.0"], Some (1, "Stable branch"), None;
+   "dev", "manualTemplate", "intro", ["1.0.2";"1.0.1";"1.0.0"], Some (1, "Stable branch"), None;
   ],
   "1.0.2", (* last stable version *)
-  322l;
+  "manualUnknownVersion",
+  322l, (* 404 wiki box *)
+  322l; (* 403 wiki box FIXME *)
 
   (** O'Closure *)
 
   oclosure_id,
   [
-  "dev", 328l, "intro", [], Some (1, "Development branch"), None;
+  "dev", "manualTemplate", "intro", [], Some (1, "Development branch"), None;
   ],
   "dev", (* last stable version*)
-  329l;
+  "manualUnknownVersion",
+  329l, (* 404 wiki box *)
+  329l; (* 403 wiki box FIXME *)
 
   (** Ocsimore *)
 
   ocsimore_id,
   [
-  "dev", 332l, "intro", [], Some (1, "Development branch"), None;
+  "dev", "manualTemplate", "intro", [], Some (1, "Development branch"), None;
   ],
   "dev", (* last stable version*)
-  333l;
+  "manualUnknownVersion",
+  333l, (* 404 wiki box *)
+  333l; (* 403 wiki box FIXME *)
 
   (** O'Browser *)
 
   obrowser_id,
   [
-  "dev", 207l, "intro", [], Some (1, "Development branch"), None;
+  "dev", "manualTemplate", "intro", [], Some (1, "Development branch"), None;
   ],
   "dev", (* last stable version*)
-  334l;
+  "manualUnknownVersion",
+  334l, (* 404 wiki box *)
+  334l; (* 403 wiki box FIXME *)
 
   (** TyXML *)
 
   tyxml_id,
   [
-  "dev", 345l, "intro", [], Some (1, "Development branch"), None;
+  "dev", "manualTemplate", "intro", [], Some (1, "Development branch"), None;
   ],
   "dev",
-  346l;
+  "manualUnknownVersion",
+  346l, (* 404 wiki box *)
+  346l; (* 403 wiki box FIXME *)
 ]
 
 (** 'Tutorial' est un cas spécial. *)
 
 let tutorial_id = 36
-let tutorial_wikibox = 295l
+let tutorial_template = "tutorialTemplate"
 let tutorial_default = "intro"
 
 let tutorial_version = ["1.91"; "2.0-rc1"; "dev"]
 let tutorial_last = "2.0-rc1"
 
-
+let tutorial_wb404 = Wiki_types.wikibox_of_sql 295l
+let tutorial_wb403 = Wiki_types.wikibox_of_sql 295l
 
 (** CSS *)
 
@@ -198,9 +215,9 @@ let guess_version () =
   | Not_found -> stable_version_name
 
 type project = {
-    wiki_id: Wiki_types.wiki;
+    wiki: Wiki_types.wiki;
     path: string;
-    wiki_box_404: Wiki_types.wikibox;
+    template_404: string; (* version not found *)
     mutable versions: version list;
     mutable last_stable: version option;
     mutable branches: branch list;
@@ -221,7 +238,7 @@ and version = {
 and branch = {
     br_project: project;
     br_name: string;
-    br_wiki_box: Wiki_types.wikibox;
+    br_template: string;
     br_title: string option;
     br_order: int;
     br_subprojects: string list list;
@@ -233,16 +250,16 @@ let known_project : project list ref = ref []
 
 exception Project_not_found
 
-let find_project wiki_id =
+let find_project wiki =
   try
-    List.find (fun p -> p.wiki_id = wiki_id ) !known_project
+    List.find (fun p -> p.wiki = wiki ) !known_project
   with
   | Not_found -> raise Project_not_found
 
 let version_404 project =
   let rec v = {
     version = "404";
-    branch = { br_wiki_box = project.wiki_box_404; br_title = Some "404";
+    branch = { br_template = project.template_404; br_title = Some "404";
 	       br_order=0; br_name = "404"; br_version = v;
 	       br_versions = []; br_project = project; br_subprojects = []; };
     manual_resolver = (fun _ -> raise Wiki_dir.Undefined);
@@ -260,8 +277,8 @@ let get_last_version project = match project.last_stable with
 | Some v -> v
 | None -> List.hd project.versions
 
-let find_version (wiki_id, version) =
-  let project = find_project wiki_id in
+let find_version (wiki, version) =
+  let project = find_project wiki in
   match version with
   | None -> get_last_version project
   | Some version ->
@@ -270,10 +287,10 @@ let find_version (wiki_id, version) =
     with
     | Not_found -> version_404 project
 
-let register_project ~wiki_id ~path ~wb404 =
+let register_project ~wiki ~path ~template_404 =
   known_project := {
-    wiki_id = wiki_id;
-    wiki_box_404 = wb404;
+    wiki;
+    template_404;
     path = String.concat "/" path;
     versions = [];
     branches = [];
@@ -295,7 +312,7 @@ let rec insert c v = function
 let insert_version = insert compare_version
 let insert_branch = insert compare_branch
 
-let register_branch ~wiki_id ~wiki_box
+let register_branch ~wiki ~template
     ?(manual_resolver = fun _ -> raise Wiki_dir.Undefined)
     ?(manual_service = fun _ _ -> raise Wiki_dir.Undefined)
     ?(default_manual_service = fun _ -> raise Wiki_dir.Undefined)
@@ -315,10 +332,10 @@ let register_branch ~wiki_id ~wiki_box
   let order, title = match title with
     | None -> max_int, None
     | Some (o, t) -> o, Some t in
-  let project = List.find (fun p -> p.wiki_id = wiki_id) !known_project in
+  let project = List.find (fun p -> p.wiki = wiki) !known_project in
   let rec branch = {
     br_project = project;
-    br_wiki_box = wiki_box;
+    br_template = template;
     br_name = name;
     br_order = order;
     br_title = title;
@@ -385,24 +402,44 @@ let get_wiki_path id =
   | Some pages -> Neturl.split_path pages
   | _ -> assert false
 
-let register_project_data (id, branches, last_stable, wb404_unknown_version) =
-  let wiki_id = Wiki_types.wiki_of_string (string_of_int id) in
-  get_wiki_path wiki_id >>= fun path ->
+exception Undefined
+exception Dir
 
-  register_project
-      ~wiki_id ~path
-      ~wb404:(Wiki_types.wikibox_of_sql wb404_unknown_version);
+let register_project_data (id, branches, last_stable, template_404, wb404, wb403) =
+  let wiki = Wiki_types.wiki_of_string (string_of_int id) in
+  lwt path = get_wiki_path wiki in
 
-   let process_manual (version, ((), file)) =
-     set_current_version version;
-     let version = find_version (wiki_id, Some version) in
-     Wiki_dir.process
-       ~wiki_id
-       ~wrapper:(Wiki_dir.make_wrapper_of_wikibox ~wb:version.branch.br_wiki_box)
-       ~resolve_wiki_menu_file:version.manual_resolver
-       ~resolve_wiki_file:version.manual_resolver
-       ~css:(fun () -> doc_css () :: site_css ())
-       () file in
+  register_project ~wiki ~path ~template_404;
+
+  let wb404 = Wiki_types.wikibox_of_sql wb404 in
+  let wb403 = Wiki_types.wikibox_of_sql wb403 in
+
+  let process_manual (version, ((), file)) () =
+    set_current_version version;
+    let version = find_version (wiki, Some version) in
+    Wiki_menu.set_menu_resolver version.manual_resolver;
+    Wiki_dir.process_wikifile
+      ~wiki ~template:version.branch.br_template
+      ~wb404 ~wb403
+      version.manual_resolver file in
+
+  let process_aux (version, ((), file)) () =
+    set_current_version version;
+    let version = find_version (wiki, Some version) in
+    Wiki_menu.set_menu_resolver version.manual_resolver;
+    Wiki_dir.process_auxfile
+      ~wiki ~template:version.branch.br_template
+      ~wb404 ~wb403
+      version.aux_resolver file in
+
+  let process_api (version, ((), file)) () =
+    set_current_version version;
+    let version = find_version (wiki, Some version) in
+    Wiki_menu.set_menu_resolver version.manual_resolver;
+    Wiki_dir.process_wikifile
+      ~wiki ~template:version.branch.br_template
+      ~wb404 ~wb403
+      version.api_resolver file in
 
   let manual_service =
     Ocsimore_appl.register_service
@@ -421,22 +458,10 @@ let register_project_data (id, branches, last_stable, wb404_unknown_version) =
       ~path
       ~priority:10
       ~get_params:(Eliom_parameters.suffix
-			(Eliom_parameters.prod
-			   (Eliom_parameters.suffix_const "manual")
-			   (Eliom_parameters.all_suffix "file")))
+		     (Eliom_parameters.prod
+			(Eliom_parameters.suffix_const "manual")
+			(Eliom_parameters.all_suffix "file")))
       (fun arg -> process_manual (stable_version_name, arg)) in
-
-  let process_aux (version, ((), file)) =
-    let version = find_version (wiki_id, Some version) in
-    Wiki_dir.serve_file
-      ~wiki_id
-      ~resolve_wiki_menu_file:version.manual_resolver
-      ~resolve_file:version.aux_resolver
-      ~wrapper:(Wiki_dir.make_wrapper_of_wikibox ~wb:version.branch.br_wiki_box)
-      ~css:(fun () -> doc_css () :: site_css ())
-      ()
-      file
-  in
 
   let aux_service =
     Eliom_output.Any.register_service
@@ -459,17 +484,6 @@ let register_project_data (id, branches, last_stable, wb404_unknown_version) =
 			(Eliom_parameters.suffix_const "files")
 			(Eliom_parameters.all_suffix "file")))
       (fun arg -> process_aux (stable_version_name, arg)) in
-
-  let process_api (version, ((), file)) () =
-	set_current_version version;
-	let version = find_version (wiki_id, Some version) in
-	Wiki_dir.process
-	  ~wiki_id
-	  ~wrapper:(Wiki_dir.make_wrapper_of_wikibox ~wb:version.branch.br_wiki_box)
-	  ~resolve_wiki_menu_file:version.manual_resolver
-	  ~resolve_wiki_file:version.api_resolver
-	  ~css:(fun () -> doc_css () :: site_css ())
-	  () file () in
 
   let api_service =
     Ocsimore_appl.register_service
@@ -522,11 +536,10 @@ let register_project_data (id, branches, last_stable, wb404_unknown_version) =
     let file = if file = [] then ["index"] else file in
     Wiki_dir.resolve_file_in_dir ~default:"index" ~suffix:".wiki" api_dir file in
 
-  let register_branch wiki_id project
-      (branch, wiki_box, default, versions, title, subprojects) =
+  let register_branch wiki project
+      (branch, template, default, versions, title, subprojects) =
     let subprojects = match subprojects with None -> [[]] | Some l -> l in
-    let wiki_box = Wiki_types.wikibox_of_sql wiki_box in
-    register_branch ~wiki_id ~wiki_box
+    register_branch ~wiki ~template
       ~manual_resolver:(manual_resolver project ~default branch)
       ~manual_service:
         (fun version file ->
@@ -556,7 +569,7 @@ let register_project_data (id, branches, last_stable, wb404_unknown_version) =
       last_stable
       branch in
 
-  List.iter (register_branch wiki_id path) (List.rev branches);
+  List.iter (register_branch wiki path) (List.rev branches);
   Lwt.return ()
 
 let () =
@@ -593,14 +606,11 @@ let tutorial_service =
                        (Eliom_parameters.all_suffix "file")))
     (fun (version, file) () ->
       set_current_version version;
-      Wiki_dir.process
-       ~wiki_id:tutorial_wiki
-       ~wrapper:(Wiki_dir.make_wrapper_of_wikibox
-		   ~wb:(Wiki_types.wikibox_of_sql tutorial_wikibox))
-       ~resolve_wiki_menu_file:(tutorial_resolver version)
-       ~resolve_wiki_file:(tutorial_resolver version)
-       ~css:(fun () -> doc_css () :: site_css ())
-       () file ())
+      Wiki_menu.set_menu_resolver (tutorial_resolver version);
+      Wiki_dir.process_wikifile
+	~wiki:tutorial_wiki ~template:tutorial_template
+	~wb404:tutorial_wb404 ~wb403:tutorial_wb403
+	(tutorial_resolver version) file)
 
 let tutorial_default_service =
   tutorial_path >|= fun tutorial_path ->
@@ -612,20 +622,14 @@ let tutorial_default_service =
          (Eliom_parameters.all_suffix "file"))
     (fun file () ->
       set_current_version stable_version_name;
-      Wiki_dir.process
-       ~wiki_id:tutorial_wiki
-       ~wrapper:(Wiki_dir.make_wrapper_of_wikibox
-                   ~wb:(Wiki_types.wikibox_of_sql tutorial_wikibox))
-       ~resolve_wiki_menu_file:(tutorial_resolver tutorial_last)
-       ~resolve_wiki_file:(tutorial_resolver tutorial_last)
-       ~css:(fun () -> doc_css () :: site_css ())
-       () file ())
+      Wiki_menu.set_menu_resolver (tutorial_resolver tutorial_last);
+      Wiki_dir.process_wikifile
+	~wiki:tutorial_wiki ~template:tutorial_template
+	~wb404:tutorial_wb404 ~wb403:tutorial_wb403
+	(tutorial_resolver tutorial_last) file)
 
 let tutorial_aux_service =
   tutorial_path >|= fun tutorial_path ->
-  let wrapper =
-    Wiki_dir.make_wrapper_of_wikibox
-      ~wb:(Wiki_types.wikibox_of_sql tutorial_wikibox) in
   Eliom_output.Any.register_service
     ~path:(tutorial_path @ ["files"])
     ~priority:10
@@ -635,23 +639,27 @@ let tutorial_aux_service =
                        (Eliom_parameters.string "version")
                        (Eliom_parameters.all_suffix "file")))
     (fun (version, file) () ->
-      Wiki_dir.serve_file
-        ~wiki_id:tutorial_wiki ~wrapper 
-        ~resolve_file:(tutorial_aux_resolver version) () file ())
+      set_current_version version;
+      Wiki_menu.set_menu_resolver (tutorial_resolver version);
+      Wiki_dir.process_auxfile
+	~wiki:tutorial_wiki ~template:tutorial_template
+	~wb404:tutorial_wb404 ~wb403:tutorial_wb403
+	(tutorial_aux_resolver version) file)
 
 let tutorial_aux_default_service =
   tutorial_path >|= fun tutorial_path ->
-  let wrapper =
-    Wiki_dir.make_wrapper_of_wikibox
-      ~wb:(Wiki_types.wikibox_of_sql tutorial_wikibox) in
   Eliom_output.Any.register_service
     ~path:(tutorial_path @ ["files"])
     ~priority:10
     ~get_params:
       (Eliom_parameters.suffix (Eliom_parameters.all_suffix "file"))
-    (Wiki_dir.serve_file
-       ~wiki_id:tutorial_wiki ~wrapper
-       ~resolve_file:(tutorial_aux_resolver tutorial_last) ())
+    (fun file () ->
+      set_current_version stable_version_name;
+      Wiki_menu.set_menu_resolver (tutorial_resolver tutorial_last);
+      Wiki_dir.process_auxfile
+	~wiki:tutorial_wiki ~template:tutorial_template
+	~wb404:tutorial_wb404 ~wb403:tutorial_wb403
+	(tutorial_aux_resolver tutorial_last) file)
 
 let () =
   Lwt_unix.run
@@ -661,14 +669,14 @@ let () =
      lwt tutorial_aux_service = tutorial_aux_service in
      lwt tutorial_aux_default_service = tutorial_aux_default_service in
      register_project
-	~wiki_id:tutorial_wiki
+	~wiki:tutorial_wiki
 	~path:tutorial_path
-	~wb404:(Wiki_types.wikibox_of_sql 299l); (* unused *)
+	~template_404:tutorial_template;
      List.iter
        (fun version ->
          register_branch
-           ~wiki_id:tutorial_wiki
-	   ~wiki_box:(Wiki_types.wikibox_of_sql tutorial_wikibox)
+           ~wiki:tutorial_wiki
+	   ~template:tutorial_template
 	   ~manual_resolver:(tutorial_resolver version)
 	   ~manual_service:(fun version file ->
              Eliom_services.preapply tutorial_service (version, file))

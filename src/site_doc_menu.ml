@@ -97,7 +97,7 @@ let get_relative_path_in_wiki bi project service =
 let append_version b bi level version title =
   let title =  if title = Site_doc.stable_version_name then "last stable" else title in
     let project = version.Site_doc.branch.Site_doc.br_project in
-    let wiki_id = Wiki_types.string_of_wiki project.Site_doc.wiki_id in
+    let wiki_id = Wiki_types.string_of_wiki project.Site_doc.wiki in
     let manual = version.Site_doc.manual_service [""] in
     let api = version.Site_doc.api_service [""] in
     try
@@ -126,7 +126,7 @@ let build_versions b bi level ?last title versions =
       | None -> List.hd versions in
     let last_manual = last_version.Site_doc.manual_service [""] in
     let project = last_version.Site_doc.branch.Site_doc.br_project in
-    let wiki_id = Wiki_types.string_of_wiki project.Site_doc.wiki_id in
+    let wiki_id = Wiki_types.string_of_wiki project.Site_doc.wiki in
     Format.bprintf b
       "%s[[wiki(%s):%s|%s]]\n"
       level wiki_id (get_relative_path_in_wiki bi project last_manual) title;
@@ -145,7 +145,7 @@ let build_branch b bi level branch =
 	branch.Site_doc.br_versions
 
 let build_doc b bi level project =
-  let wiki_id = Wiki_types.string_of_wiki project.Site_doc.wiki_id in
+  let wiki_id = Wiki_types.string_of_wiki project.Site_doc.wiki in
   let last_stable_version = Site_doc.get_last_version project in
   let last_stable_manual = last_stable_version.Site_doc.manual_service [""] in
   Format.bprintf b

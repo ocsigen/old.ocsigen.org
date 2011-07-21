@@ -38,7 +38,7 @@ local/var/www/static/:
 	mkdir -p $@
 	sh files/update-symlinks.sh
 	cd files/data && for f in $$(ls); do ln -s ../../../../files/data/$$f ../../local/var/www/static/; done
-	cp /opt/ocsigen/src/ocsimore/_build/src/site/client/ocsimore.js $@
+	cp $$(ocamlfind query ocsimore)/ocsimore.js $@
 local/var/www/ocsimore_static:
 	mkdir -p $@
 	cp /opt/ocsigen/src/ocsimore/local/var/www/static/* $@
