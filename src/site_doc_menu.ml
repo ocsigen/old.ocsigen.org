@@ -19,24 +19,26 @@ let build_api_trees bi version =
        (build_api_tree bi version)
        (version.Site_doc.api_menu ())) >|= fun l ->
     List.concat l
-  with exc ->
+  with
+  | Wiki_dir.Undefined | Ocsigen_local_files.Failed_404 -> Lwt.return []
+  | exc ->
     let msg =
       Format.sprintf "Can't read api menu (exception: %s)"
 	(Printexc.to_string exc) in
     Lwt.fail (Site_doc.Error msg)
 
 let build_manual_tree bi branch =
-  try
     try_lwt
       Wiki_menu.build_tree_from_file bi
 	~file:(branch.Site_doc.manual_menu ())
 	~create_service:(fun ?wiki file -> branch.Site_doc.manual_service file)
-    with exc ->
+    with
+    | Wiki_dir.Undefined | Ocsigen_local_files.Failed_404 -> Lwt.return []
+    | exc ->
       let msg =
 	Format.sprintf "Can't read manual menu (exception: %s)"
 	  (Printexc.to_string exc) in
       Lwt.fail (Site_doc.Error msg)
-  with Wiki_dir.Undefined | Ocsigen_local_files.Failed_404 -> Lwt.return []
 
 let build_doctree ?service bi version =
   build_api_trees bi version >>= fun api_tree ->
