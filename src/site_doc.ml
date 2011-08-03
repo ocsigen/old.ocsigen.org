@@ -132,43 +132,7 @@ let tutorial_last = "2.0-rc1"
 let tutorial_wb404 = Wiki_types.wikibox_of_sql 295l
 let tutorial_wb403 = Wiki_types.wikibox_of_sql 295l
 
-(** CSS *)
-
-let site_css () = [
-  Eliom_output.Html5.css_link
-    ~a:[ HTML5.M.a_title "Default";
-	 HTML5.M.a_media [`Screen]; ]
-    ~uri:(Eliom_output.Html5.make_uri
-	    ~service:(Eliom_services.static_dir ())
-	    ["resources";"doc";"style.css"]) ();
-  Eliom_output.Html5.css_link
-    ~a:[ HTML5.M.a_title "Printable";
-	 HTML5.M.a_rel [`Alternate];
-	 HTML5.M.a_media [`Screen]; ]
-    ~uri:(Eliom_output.Html5.make_uri
-	    ~service:(Eliom_services.static_dir ())
-	    ["resources";"doc";"printable.css"]) ();
-  Eliom_output.Html5.css_link
-    ~a:[ HTML5.M.a_title "Printable";
-	 HTML5.M.a_media [`Print]; ]
-    ~uri:(Eliom_output.Html5.make_uri
-	    ~service:(Eliom_services.static_dir ())
-	    ["resources";"doc";"printable.css"]) ();
-  Eliom_output.Html5.css_link
-    ~uri:(Eliom_output.Html5.make_uri
-	    ~service:(Eliom_services.static_dir ())
-	    ["resources";"doc";"codecolor.css"]) ();
-]
-
-let doc_css =
-  Eliom_output.Html5.css_link
-    ~a:[ HTML5.M.a_media [`Screen]; ]
-    ~uri:(Page_site.static_file_uri ["css";"docstyle.css"])
-
 (** Gestion des erreurs. *)
-
-let (>>=) = Lwt.bind
-let (>|=) m f = Lwt.map f m
 
 exception Error of string
 
@@ -264,12 +228,12 @@ let version_404 project =
 	       br_versions = []; br_project = project; br_subprojects = []; };
     manual_resolver = (fun _ -> raise Wiki_dir.Undefined);
     manual_service = (fun _ -> raise Wiki_dir.Undefined);
-    manual_menu = (fun () -> raise Wiki_dir.Undefined);
+    manual_menu = (fun _ -> raise Wiki_dir.Undefined);
     aux_resolver = (fun _ -> raise Wiki_dir.Undefined);
     aux_service = (fun _ -> raise Wiki_dir.Undefined);
     api_resolver = (fun _ -> raise Wiki_dir.Undefined);
     api_service = (fun _ -> raise Wiki_dir.Undefined);
-    api_menu = (fun () -> raise Wiki_dir.Undefined);
+    api_menu = (fun _ -> raise Wiki_dir.Undefined);
   } in
   v
 
@@ -397,9 +361,9 @@ let register_branch ~wiki ~template
 (** Creation des services. *)
 
 let get_wiki_path id =
-  (Wiki_sql.get_wiki_info_by_id id) >|= fun info ->
+  lwt info = Wiki_sql.get_wiki_info_by_id id in
   match info.Wiki_types.wiki_pages with
-  | Some pages -> Neturl.split_path pages
+  | Some pages -> Lwt.return (Neturl.split_path pages)
   | _ -> assert false
 
 exception Undefined
@@ -583,10 +547,12 @@ let tutorial_dir     v = manual_wiki_dir ^ "/tutorial/" ^ v ^ "/src"
 let tutorial_aux_dir v = manual_wiki_dir ^ "/tutorial/" ^ v ^ "/files"
 
 let tutorial_path =
-  (Wiki_sql.get_wiki_info_by_id tutorial_wiki) >|= fun info ->
-    match info.Wiki_types.wiki_pages with
-    | Some pages -> Neturl.split_path pages
-    | _ -> assert false
+  lwt info = Wiki_sql.get_wiki_info_by_id tutorial_wiki in
+  match info.Wiki_types.wiki_pages with
+  | Some pages -> Lwt.return (Neturl.split_path pages)
+  | _ -> assert false
+
+let tutorial_path = Lwt_unix.run tutorial_path
 
 let tutorial_resolver v =
   Wiki_dir.resolve_file_in_dir ~default:tutorial_default ~suffix:".wiki" (tutorial_dir v)
@@ -595,15 +561,14 @@ let tutorial_aux_resolver v f =
   Wiki_dir.resolve_file_in_dir (tutorial_aux_dir v) f
 
 let tutorial_service =
-  tutorial_path >|= fun tutorial_path ->
   Ocsimore_appl.register_service
     ~path:tutorial_path
     ~priority:10
     ~get_params:
-      (Eliom_parameters.suffix
-                    (Eliom_parameters.prod
-                       (Eliom_parameters.string "version")
-                       (Eliom_parameters.all_suffix "file")))
+    (Eliom_parameters.suffix
+       (Eliom_parameters.prod
+          (Eliom_parameters.string "version")
+          (Eliom_parameters.all_suffix "file")))
     (fun (version, file) () ->
       set_current_version version;
       Wiki_menu.set_menu_resolver (tutorial_resolver version);
@@ -613,13 +578,12 @@ let tutorial_service =
 	(tutorial_resolver version) file)
 
 let tutorial_default_service =
-  tutorial_path >|= fun tutorial_path ->
   Ocsimore_appl.register_service
     ~path:tutorial_path
     ~priority:10
     ~get_params:
-      (Eliom_parameters.suffix
-         (Eliom_parameters.all_suffix "file"))
+    (Eliom_parameters.suffix
+       (Eliom_parameters.all_suffix "file"))
     (fun file () ->
       set_current_version stable_version_name;
       Wiki_menu.set_menu_resolver (tutorial_resolver tutorial_last);
@@ -629,15 +593,14 @@ let tutorial_default_service =
 	(tutorial_resolver tutorial_last) file)
 
 let tutorial_aux_service =
-  tutorial_path >|= fun tutorial_path ->
   Eliom_output.Any.register_service
     ~path:(tutorial_path @ ["files"])
     ~priority:10
     ~get_params:
-      (Eliom_parameters.suffix
-                    (Eliom_parameters.prod
-                       (Eliom_parameters.string "version")
-                       (Eliom_parameters.all_suffix "file")))
+    (Eliom_parameters.suffix
+       (Eliom_parameters.prod
+          (Eliom_parameters.string "version")
+          (Eliom_parameters.all_suffix "file")))
     (fun (version, file) () ->
       set_current_version version;
       Wiki_menu.set_menu_resolver (tutorial_resolver version);
@@ -647,12 +610,11 @@ let tutorial_aux_service =
 	(tutorial_aux_resolver version) file)
 
 let tutorial_aux_default_service =
-  tutorial_path >|= fun tutorial_path ->
   Eliom_output.Any.register_service
     ~path:(tutorial_path @ ["files"])
     ~priority:10
     ~get_params:
-      (Eliom_parameters.suffix (Eliom_parameters.all_suffix "file"))
+    (Eliom_parameters.suffix (Eliom_parameters.all_suffix "file"))
     (fun file () ->
       set_current_version stable_version_name;
       Wiki_menu.set_menu_resolver (tutorial_resolver tutorial_last);
@@ -662,34 +624,27 @@ let tutorial_aux_default_service =
 	(tutorial_aux_resolver tutorial_last) file)
 
 let () =
-  Lwt_unix.run
-    (lwt tutorial_path = tutorial_path in
-     lwt tutorial_service = tutorial_service in
-     lwt tutorial_default_service = tutorial_default_service in
-     lwt tutorial_aux_service = tutorial_aux_service in
-     lwt tutorial_aux_default_service = tutorial_aux_default_service in
-     register_project
-	~wiki:tutorial_wiki
-	~path:tutorial_path
-	~template_404:tutorial_template;
-     List.iter
-       (fun version ->
-         register_branch
-           ~wiki:tutorial_wiki
-	   ~template:tutorial_template
-	   ~manual_resolver:(tutorial_resolver version)
-	   ~manual_service:(fun version file ->
-             Eliom_services.preapply tutorial_service (version, file))
-	   ~default_manual_service:(fun file ->
-             Eliom_services.preapply tutorial_default_service file)
-	   ~manual_menu:(fun () -> tutorial_resolver version ["menu"])
-	   ~aux_service:(fun version file ->
-	     Eliom_services.preapply tutorial_aux_service (version, file))
-	   ~default_aux_service:(fun file ->
-	     Eliom_services.preapply tutorial_aux_default_service file)
-	   ~aux_resolver:(tutorial_aux_resolver version)
-           ~versions:[version]
+  register_project
+    ~wiki:tutorial_wiki
+    ~path:tutorial_path
+    ~template_404:tutorial_template;
+  List.iter
+    (fun version ->
+      register_branch
+        ~wiki:tutorial_wiki
+	~template:tutorial_template
+	~manual_resolver:(tutorial_resolver version)
+	~manual_service:(fun version file ->
+          Eliom_services.preapply tutorial_service (version, file))
+	~default_manual_service:(fun file ->
+          Eliom_services.preapply tutorial_default_service file)
+	~manual_menu:(fun () -> tutorial_resolver version ["menu"])
+	~aux_service:(fun version file ->
+	  Eliom_services.preapply tutorial_aux_service (version, file))
+	~default_aux_service:(fun file ->
+	  Eliom_services.preapply tutorial_aux_default_service file)
+	~aux_resolver:(tutorial_aux_resolver version)
+        ~versions:[version]
 	tutorial_last (* Last stable version *)
 	version) (* default branch name *)
-        tutorial_version;
-     Lwt.return ())
+    tutorial_version
