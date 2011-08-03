@@ -287,7 +287,7 @@ let register_branch ~wiki ~template
     ?(api_resolver = fun _ _ -> raise Wiki_dir.Undefined)
     ?(api_service = fun _ _ -> raise Wiki_dir.Undefined)
     ?(default_api_service = fun _ -> raise Wiki_dir.Undefined)
-    ?(api_menu = fun _ -> raise Wiki_dir.Undefined)
+    ?(api_menu = fun _ _ -> raise Wiki_dir.Undefined)
     ?title
     ?(versions = [])
     ?(subprojects = [[]])
