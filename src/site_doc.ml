@@ -302,6 +302,7 @@ let register_branch ~wiki ~template
     | None -> max_int, None
     | Some (o, t) -> o, Some t in
   let project = List.find (fun p -> p.wiki = wiki) !known_project in
+  let src_name = name ^ "-src" in
   let rec branch = {
     br_project = project;
     br_template = template;
@@ -322,9 +323,21 @@ let register_branch ~wiki ~template
     api_resolver = api_resolver name;
     api_service = (api_service name :> string list -> wiki_service);
     api_menu = api_menu name;
-  } in
+  } and src_version = {
+    version = src_name;
+    branch = branch;
+    manual_resolver = manual_resolver;
+    manual_service = (manual_service src_name :> string list -> wiki_service);
+    manual_menu = manual_menu;
+    aux_resolver = aux_resolver;
+    aux_service = (aux_service src_name :> string list -> wiki_service);
+    api_resolver = api_resolver src_name;
+    api_service = (api_service src_name :> string list -> wiki_service);
+    api_menu = api_menu src_name;
+  }in
   project.branches <- insert_branch branch project.branches;
   project.versions <- insert_version version project.versions;
+  project.versions <- insert_version src_version project.versions;
   let add_version v =
     let v = {
       version = v;

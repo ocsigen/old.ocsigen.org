@@ -394,12 +394,12 @@ let parse_contents bi args contents =
 	  path, `Section id
       | _ -> raise (Site_doc.Error "invalid contents")
 
-let string_of_id : id -> string = function
+let string_of_id ?(spacer = ".") : id -> string = function
   | (path, ( `Method (cl,name) | `Attr (cl, name))) ->
-      name ^ " [" ^ String.concat "." (path @ [cl]) ^"]"
+      name ^ " [" ^ String.concat spacer (path @ [cl]) ^"]"
   | (path, ( `Mod name   | `ModType name | `Class name | `ClassType name
            | `Value name | `Type name   | `Exc name )) ->
-      String.concat "." (path @ [name])
+      String.concat spacer (path @ [name])
   | (_,`Index) -> "Api introduction"
   | (_, `IndexTypes)
   | (_, `IndexExceptions)
@@ -418,7 +418,7 @@ let do_api_link prefix bi args contents =
   lwt version = get_project_version bi args in
   lwt sub = get_subproject bi version args in
   let id = parse_contents bi args contents in
-  lwt body = get_text ~default:(string_of_id id) bi args in
+  lwt body = get_text ~default:(string_of_id ~spacer:".​" id) bi args in
 
   (* Check file existence *)
   (* ignore(version.Site_doc.api_resolver (sub @ [path_of_id ?prefix id]) *)
@@ -428,7 +428,7 @@ let do_api_link prefix bi args contents =
   let doc_class = "ocsforge_doclink_" ^ version.Site_doc.branch.Site_doc.br_project.Site_doc.path in
   let a =
     Eliom_output.Html5.a
-      ~a:[HTML5.M.a_class [doc_class]]
+      ~a:[HTML5.M.a_class [doc_class]; HTML5.M.a_style "word-space: pre-line;"]
       ~service:(version.Site_doc.api_service (sub @ [path_of_id ?prefix id]))
       ?fragment:(fragment_of_id id)
       [HTML5.M.pcdata body] () in
