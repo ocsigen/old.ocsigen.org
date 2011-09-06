@@ -30,7 +30,7 @@ let get_repository bi args =
   with Not_found -> repository_default
 
 let do_wikifile bi args c =
-  Wikicreole.Flow5
+  `Flow5
     (try
       let repository = get_repository bi args in
       let filename = List.assoc "file" args in
@@ -43,7 +43,8 @@ let do_wikifile bi args c =
 	Lwt_io.with_file ~mode:Lwt_io.input file
 	  (fun ch ->
 	    lwt data = Lwt_io.read ch in
-	    lwt xml = Wiki_syntax.xml_of_wiki Wiki_syntax.wikicreole_parser bi data in
+	    lwt xml = Wiki_syntax.xml_of_wiki
+	      (Wiki_syntax.cast_wp Wiki_syntax.wikicreole_parser_without_header_footer) bi data in
 	    Lwt.return xml)
       | Ocsigen_local_files.RDir file -> Lwt.return []
     with
@@ -55,12 +56,13 @@ let do_wikifile bi args c =
 	      [ HTML5.M.pcdata (Printexc.to_string exc ) ] ])
 
 let _ =
-  Wiki_syntax.add_extension Wiki_syntax.wikicreole_parser "wikifile" do_wikifile
+  Wiki_syntax.register_interactive_simple_flow_extension
+    ~name:"wikifile" ~reduced:false do_wikifile
 
 (** Extension script *)
 
 let do_script bi args c =
-  Wikicreole.Flow5
+  `Flow5
     (try
       let script = List.assoc "src" args in
       Lwt.return
@@ -80,7 +82,8 @@ let do_script bi args c =
 	    (HTML5.M.cdata_script content) ])
 
 let _ =
-  Wiki_syntax.add_extension Wiki_syntax.wikicreole_parser "script" do_script
+  Wiki_syntax.register_simple_flow_extension
+    ~name:"script" ~reduced:false do_script
 
 (** Extension atom *)
 (* Mmmmh. à revoir complètement *)
@@ -99,9 +102,9 @@ let add_atom_header () = Page_site.Header.require_header atom_header
 
 let do_atom bi args c =
   add_atom_header ();
-  Wikicreole.Phrasing_without_interactive (Lwt.return [])
+  `Flow5 (Lwt.return [])
 
 let _ =
-  Wiki_syntax.add_extension Wiki_syntax.wikicreole_parser "atom" do_atom
+  Wiki_syntax.register_simple_flow_extension ~name:"atom" ~reduced:false do_atom
 
 

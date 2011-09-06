@@ -3,14 +3,15 @@ let (>>=) = Lwt.bind
 let (>|=) m f = Lwt.map f m
 
 let register name f =
-  Wiki_syntax.add_extension Wiki_syntax.wikicreole_parser name
-    (Site_doc.wrap_flow5 name f)
+  Wiki_syntax.register_interactive_simple_flow_extension
+    ~name ~reduced:false (Site_doc.wrap_flow5 name f)
 
 (** <<doctree [project="..."] [subproject="..."] [version="..."] >> *)
 
 let build_api_tree bi version file =
   Wiki_menu.build_tree_from_file bi
-    ~create_service:(fun ?wiki file -> version.Site_doc.api_service file)
+    ~create_service:(fun ?wiki file ->
+      (version.Site_doc.api_service file :> Eliom_tools_common.get_page))
     ~file
 
 let build_api_trees bi version =
@@ -31,7 +32,8 @@ let build_manual_tree bi branch =
     try_lwt
       Wiki_menu.build_tree_from_file bi
 	~file:(branch.Site_doc.manual_menu ())
-	~create_service:(fun ?wiki file -> branch.Site_doc.manual_service file)
+	~create_service:(fun ?wiki file ->
+	  (branch.Site_doc.manual_service file :> Eliom_tools_common.get_page))
     with
     | Wiki_dir.Undefined | Ocsigen_local_files.Failed_404 -> Lwt.return []
     | exc ->
@@ -77,9 +79,10 @@ let do_apitree bi args contents =
 let do_manualtree bi args contents =
   Site_doc_link.get_project_version bi args >>= build_manualtree bi
 
-let _ = register  "doctree" do_doctree
-let _ = register  "apitree" do_apitree
-let _ = register  "manualtree" do_manualtree
+
+let _ = register "doctree" do_doctree
+let _ = register "apitree" do_apitree
+let _ = register "manualtree" do_manualtree
 
 (** <<docmenu project='...' level='2' >> *)
 (** <<docversions project='...' level='2' >> *)
@@ -167,7 +170,7 @@ let do_docmenu bi args contents =
     match contents with
     | Some c -> Buffer.contents b ^ c
     | None -> Buffer.contents b in
-  Wiki_syntax.xml_of_wiki Wiki_syntax.menu_parser bi contents
+  Wiki_syntax.xml_of_wiki (Wiki_syntax.cast_wp Wiki_syntax.menu_parser) bi contents
 
 let register name f =
   let error (msg:string) =
@@ -176,7 +179,7 @@ let register name f =
 	  [ HTML5.M.span ~a:[HTML5.M.a_class ["doclink_error"]] [HTML5.M.pcdata msg]] ] in
 
   let wrap f = fun bi args contents ->
-    Wikicreole.Flow5
+    `Flow5
       (try_lwt
 	  f bi args contents
        with
@@ -186,7 +189,7 @@ let register name f =
 	 error (Format.sprintf "Error %s: exception %s" name
 		  (Printexc.to_string exc) ) ) in
 
-  Wiki_syntax.add_extension Wiki_syntax.menu_parser name (wrap f)
+  Wiki_syntax.register_simple_extension Wiki_syntax.menu_parser name (wrap f)
 
 let _ = register "docmenu" do_docmenu
 

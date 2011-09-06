@@ -140,7 +140,7 @@ let error (msg:string) =
   Lwt.return [ HTML5.M.span ~a:[HTML5.M.a_class ["doclink_error"]] [HTML5.M.pcdata msg] ]
 
 let wrap_phrasing name f = fun bi args contents ->
-  Wikicreole.Phrasing_without_interactive
+  `Phrasing_without_interactive
     (lwt content =
        try_lwt
 	 f bi args contents
@@ -152,7 +152,7 @@ let wrap_phrasing name f = fun bi args contents ->
      Lwt.return [HTML5.M.span content])
 
 let wrap_flow5 name f = fun bi args contents ->
-  Wikicreole.Flow5
+  `Flow5
     (try_lwt
 	f bi args contents
      with
@@ -178,6 +178,11 @@ let guess_version () =
   with
   | Not_found -> stable_version_name
 
+type wiki_service =
+    (unit, unit, Eliom_services.get_service_kind, [ `WithoutSuffix ],
+     unit, unit, Eliom_services.registrable,
+     Eliom_output.appl_service) Eliom_services.service
+
 type project = {
     wiki: Wiki_types.wiki;
     path: string;
@@ -191,12 +196,12 @@ and version = {
     version: string;
     branch: branch;
     manual_resolver: string list Wiki_dir.resolver;
-    manual_service: string list -> Eliom_tools_common.get_page;
+    manual_service: string list -> wiki_service;
     manual_menu: unit -> Ocsigen_local_files.resolved;
     aux_resolver: string list Wiki_dir.resolver;
-    aux_service: string list -> Eliom_tools_common.get_page;
+    aux_service: string list -> wiki_service;
     api_resolver: string list Wiki_dir.resolver;
-    api_service: string list -> Eliom_tools_common.get_page;
+    api_service: string list -> wiki_service;
     api_menu: unit -> Ocsigen_local_files.resolved list;
   }
 and branch = {
@@ -310,12 +315,12 @@ let register_branch ~wiki ~template
     version = name;
     branch = branch;
     manual_resolver = manual_resolver;
-    manual_service = (manual_service name :> string list -> Eliom_tools_common.get_page);
+    manual_service = (manual_service name :> string list -> wiki_service);
     manual_menu = manual_menu;
     aux_resolver = aux_resolver;
-    aux_service = (aux_service name :> string list -> Eliom_tools_common.get_page);
+    aux_service = (aux_service name :> string list -> wiki_service);
     api_resolver = api_resolver name;
-    api_service = (api_service name :> string list -> Eliom_tools_common.get_page);
+    api_service = (api_service name :> string list -> wiki_service);
     api_menu = api_menu name;
   } in
   project.branches <- insert_branch branch project.branches;
@@ -325,12 +330,12 @@ let register_branch ~wiki ~template
       version = v;
       branch = branch;
       manual_resolver = manual_resolver;
-      manual_service = (manual_service v :> string list -> Eliom_tools_common.get_page);
+      manual_service = (manual_service v :> string list -> wiki_service);
       manual_menu = manual_menu;
       aux_resolver = aux_resolver;
-      aux_service = (aux_service v :> string list -> Eliom_tools_common.get_page);
+      aux_service = (aux_service v :> string list -> wiki_service);
       api_resolver = api_resolver v;
-      api_service = (api_service v :> string list -> Eliom_tools_common.get_page);
+      api_service = (api_service v :> string list -> wiki_service);
       api_menu = api_menu v;
     } in
     branch.br_versions <- insert_version v branch.br_versions;
@@ -340,12 +345,12 @@ let register_branch ~wiki ~template
 	version = stable_version_name;
 	branch = branch;
 	manual_resolver = manual_resolver;
-	manual_service = (default_manual_service :> string list -> Eliom_tools_common.get_page);
+	manual_service = (default_manual_service :> string list -> wiki_service);
 	manual_menu = manual_menu;
 	aux_resolver = aux_resolver;
-	aux_service = (default_aux_service :> string list -> Eliom_tools_common.get_page);
+	aux_service = (default_aux_service :> string list -> wiki_service);
 	api_resolver = api_resolver last_stable_version;
-	api_service = (default_api_service :> string list -> Eliom_tools_common.get_page);
+	api_service = (default_api_service :> string list -> wiki_service);
 	api_menu = api_menu last_stable_version;
       } in
       branch.br_versions <- insert_version v branch.br_versions;

@@ -7,12 +7,15 @@ open Eliom_pervasives
     de pdf. *)
 
 let register name f =
-  Wiki_syntax.add_extension Wiki_syntax.wikicreole_parser name
-    (Site_doc.wrap_phrasing name f);
-  Wiki_syntax.add_extension Wiki_syntax.phrasing_wikicreole_parser name
-    (Site_doc.wrap_phrasing name f);
-  Wiki_syntax.add_extension Wiki_syntax.menu_parser name
-    (Site_doc.wrap_phrasing name f)
+  Wiki_syntax.raw_register_wiki_extension ~name
+    ~wp:Wiki_syntax.wikicreole_parser (Site_doc.wrap_phrasing name f);
+  Wiki_syntax.raw_register_wiki_extension ~name
+    ~wp:Wiki_syntax.wikicreole_parser_without_header_footer (Site_doc.wrap_phrasing name f);
+  Wiki_syntax.raw_register_wiki_extension ~name
+    ~wp:Wiki_syntax.phrasing_wikicreole_parser (Site_doc.wrap_phrasing name f);
+  Wiki_syntax.raw_register_wiki_extension ~name
+    ~wp:Wiki_syntax.menu_parser (Site_doc.wrap_phrasing name f)
+
 
 (** Comment construire l'URL d'un identificateur OCaml dans l'API? *)
 
@@ -140,10 +143,10 @@ let get_subproject bi version args =
 (** Le contenu de <<pdfonly >> est ignoré. *)
 
 let do_pdfonly bi args contents =
-  Wikicreole.Phrasing_without_interactive (Lwt.return [])
+  `Phrasing_without_interactive (Lwt.return [])
 
 let _ =
-  Wiki_syntax.add_extension Wiki_syntax.wikicreole_parser "pdfonly" do_pdfonly
+  Wiki_syntax.register_wiki_phrasing_extension ~name:"pdfonly" { Wiki_syntax.ppp = do_pdfonly }
 
 
 
@@ -152,14 +155,11 @@ let _ =
 
 let do_webonly bi args contents =
   match contents with
-  | None ->  Wikicreole.Phrasing_without_interactive (Lwt.return [])
-  | Some contents ->
-      let contents =
-	Wiki_syntax.xml_of_wiki Wiki_syntax.wikicreole_parser bi contents in
-      Wikicreole.Flow5 contents
+  | None -> `Phrasing_without_interactive (Lwt.return [])
+  | Some contents -> `Flow5 contents
 
 let _ =
-  Wiki_syntax.add_extension Wiki_syntax.wikicreole_parser "webonly" do_webonly
+  Wiki_syntax.register_wiki_extension ~name:"webonly" do_webonly
 
 
 
@@ -185,7 +185,11 @@ let do_manual_link bi args contents =
   (* Parse contents *)
   lwt contents =
     match contents with
-    | Some contents -> Wiki_syntax.phrasing_without_interactive_of_wiki bi contents
+    | Some contents ->
+      Wiki_syntax.xml_of_wiki
+	(Wiki_syntax.cast_niwp Wiki_syntax.phrasing_wikicreole_parser)
+	bi
+	contents
     | None -> Lwt.fail (Site_doc.Error "Empty contents") in
 
   (* Check file existence *)
@@ -194,15 +198,20 @@ let do_manual_link bi args contents =
 
   (* Build URL *)
   let doc_class = "ocsforge_doclink_" ^ version.Site_doc.branch.Site_doc.br_project.Site_doc.path in
+
   let a =
     Eliom_output.Html5.a
       ~a:[HTML5.M.a_class [doc_class]]
       ~service:(version.Site_doc.manual_service chapter)
-      ?fragment contents ()
+      ?fragment
+      contents
+      ()
   in
   Lwt.return [a]
 
-let _ = register "a_manual" do_manual_link
+let _ =
+  register "a_manual" do_manual_link
+
 (* let _ = register_inline "a_manual" do_manual_link *)
 
 
@@ -230,7 +239,11 @@ let do_aux_link bi args contents =
   (* Parse contents *)
   lwt contents = match contents with
    | None -> Lwt.return [HTML5.M.pcdata (Filename.basename src)]
-   | Some contents -> Wiki_syntax.phrasing_without_interactive_of_wiki bi contents in
+   | Some contents ->
+      Wiki_syntax.xml_of_wiki
+	(Wiki_syntax.cast_niwp Wiki_syntax.phrasing_wikicreole_parser)
+	bi
+	contents in
 
   (* Build URL *)
   let doc_class = "ocsforge_doclink_" ^ version.Site_doc.branch.Site_doc.br_project.Site_doc.path in
