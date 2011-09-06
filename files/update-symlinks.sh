@@ -4,7 +4,6 @@ find -type l -delete
 
 ln -s server/ ./files/data/ocsigenserver
 
-ln -s ../resources ./files/data/resources/resources
 ln -s ../resources ./files/data/ocsimore/resources
 ln -s ../resources ./files/data/obrowser/resources
 ln -s ../resources/ ./files/data/eliom/resources
