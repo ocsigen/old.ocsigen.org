@@ -108,3 +108,81 @@ let _ =
   Wiki_syntax.register_simple_flow_extension ~name:"atom" ~reduced:false do_atom
 
 
+(* Work in progress *)
+
+let get_inline bi args =
+  List.mem_assoc "inline" args
+
+let do_wip bi args xml =
+  `Flow5
+    (lwt xml = match xml with
+      | Some c -> (c :> HTML5_types.flow5 HTML5.M.elt list Lwt.t)
+      | None -> Lwt.return [] in
+     Lwt.return
+       [ HTML5.M.aside
+           ~a:[HTML5.M.a_class ["wip"]]
+           ( HTML5.M.header [HTML5.M.h5 [HTML5.M.pcdata "Work in progress"]]
+	     :: xml ) ])
+
+let do_wip_inline bi args xml =
+  `Phrasing_without_interactive
+    (lwt xml = match xml with
+       | Some c -> (c :> HTML5_types.phrasing HTML5.M.elt list Lwt.t)
+       | None -> Lwt.return [] in
+     let title =
+       try List.assoc "title" args
+       with Not_found -> "WIP: " in
+     Lwt.return
+       [ HTML5.M.span
+           ~a:[HTML5.M.a_class ["wip"]]
+           ( HTML5.M.strong [HTML5.M.pcdata title] :: xml ) ])
+
+let _ =
+  Wiki_syntax.register_wiki_flow_extension ~reduced:false ~name:"wip" { Wiki_syntax.fpp = do_wip };
+  Wiki_syntax.register_wiki_phrasing_extension ~reduced:false ~name:"wip-inline" { Wiki_syntax.ppp = do_wip_inline }
+
+
+(* Concepts *)
+
+let do_concepts bi args xml =
+  `Flow5
+    (lwt xml = match xml with
+      | Some c -> (c :> HTML5_types.flow5 HTML5.M.elt list Lwt.t)
+      | None -> Lwt.return [] in
+     Lwt.return
+       [ HTML5.M.aside
+           ~a:[HTML5.M.a_class ["concepts"]]
+           ( HTML5.M.header [HTML5.M.h5 [HTML5.M.pcdata "Concepts"]]
+	     :: xml ) ])
+
+let _ =
+  Wiki_syntax.register_wiki_flow_extension
+    ~name:"concepts" ~reduced:false { Wiki_syntax.fpp = do_concepts }
+
+
+(* Concept *)
+
+let get_title bi args =
+  try List.assoc "title" args
+  with Not_found -> "Concept"
+
+let do_concept bi args xml =
+  `Flow5
+    (lwt xml = match xml with
+      | Some c -> (c :> HTML5_types.flow5 HTML5.M.elt list Lwt.t)
+      | None -> Lwt.return [] in
+     let title = get_title bi args in
+     Lwt.return
+       [ HTML5.M.aside
+           ~a:[HTML5.M.a_class ["concept"]]
+           ( HTML5.M.header [HTML5.M.h5 [HTML5.M.span
+					   ~a:[HTML5.M.a_style "display: none;"]
+					   [HTML5.M.pcdata "Concept: "];
+					 HTML5.M.pcdata title]]
+	     :: xml ) ])
+
+let _ =
+  Wiki_syntax.register_wiki_flow_extension
+    ~name:"concept" ~reduced:false { Wiki_syntax.fpp = do_concept }
+
+
