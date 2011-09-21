@@ -1,5 +1,5 @@
 
-APP_NAME := ocsigen_org
+APP_NAME := site
 
 SERVER_FILES :=     \
   src/site_ocsimore.ml  \
