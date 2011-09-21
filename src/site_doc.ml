@@ -295,6 +295,8 @@ let compare_version v1 v2 =
     | "", "" -> 0
     | "", _ -> 1
     | _, "" -> -1
+    | v1, v2 when v2 = v1 ^ "-src" -> 1
+    | v2, v1 when v2 = v1 ^ "-src" -> -1
     | v2, v1 -> Pervasives.compare v2 v1
 let compare_branch b1 b2 = Pervasives.compare b1.br_order b2.br_order
 let rec insert c v = function
@@ -338,10 +340,10 @@ let register_branch ~wiki ~template
   } and version = {
     version = name;
     branch = branch;
-    manual_resolver = manual_resolver;
+    manual_resolver = manual_resolver name;
     manual_service = (manual_service name :> string list -> wiki_service);
     manual_menu = manual_menu;
-    aux_resolver = aux_resolver;
+    aux_resolver = aux_resolver name;
     aux_service = (aux_service name :> string list -> wiki_service);
     api_resolver = api_resolver name;
     api_service = (api_service name :> string list -> wiki_service);
@@ -349,10 +351,10 @@ let register_branch ~wiki ~template
   } and src_version = {
     version = src_name;
     branch = branch;
-    manual_resolver = manual_resolver;
+    manual_resolver = manual_resolver src_name;
     manual_service = (manual_service src_name :> string list -> wiki_service);
     manual_menu = manual_menu;
-    aux_resolver = aux_resolver;
+    aux_resolver = aux_resolver src_name;
     aux_service = (aux_service src_name :> string list -> wiki_service);
     api_resolver = api_resolver src_name;
     api_service = (api_service src_name :> string list -> wiki_service);
@@ -365,10 +367,10 @@ let register_branch ~wiki ~template
     let v = {
       version = v;
       branch = branch;
-      manual_resolver = manual_resolver;
+      manual_resolver = manual_resolver name;
       manual_service = (manual_service v :> string list -> wiki_service);
       manual_menu = manual_menu;
-      aux_resolver = aux_resolver;
+      aux_resolver = aux_resolver name;
       aux_service = (aux_service v :> string list -> wiki_service);
       api_resolver = api_resolver v;
       api_service = (api_service v :> string list -> wiki_service);
@@ -380,10 +382,10 @@ let register_branch ~wiki ~template
       let v = {
 	version = stable_version_name;
 	branch = branch;
-	manual_resolver = manual_resolver;
+	manual_resolver = manual_resolver name;
 	manual_service = (default_manual_service :> string list -> wiki_service);
 	manual_menu = manual_menu;
-	aux_resolver = aux_resolver;
+	aux_resolver = aux_resolver name;
 	aux_service = (default_aux_service :> string list -> wiki_service);
 	api_resolver = api_resolver last_stable_version;
 	api_service = (default_api_service :> string list -> wiki_service);
@@ -545,14 +547,14 @@ let register_project_data (id, branches, last_stable, template_404, wb404, wb403
       (branch, template, default, versions, title, subprojects) =
     let subprojects = match subprojects with None -> [[]] | Some l -> l in
     register_branch ~wiki ~template
-      ~manual_resolver:(manual_resolver project ~default branch)
+      ~manual_resolver:(fun branch -> manual_resolver project ~default branch)
       ~manual_service:
         (fun version file ->
 	  Eliom_services.preapply manual_service (version, ((),file)))
       ~default_manual_service:
         (fun file -> Eliom_services.preapply default_manual_service ((),file))
       ~manual_menu:(fun () -> manual_resolver project branch ["menu"])
-      ~aux_resolver:(aux_resolver project branch)
+      ~aux_resolver:(fun branch -> aux_resolver project branch)
       ~aux_service:
         (fun version file ->
 	  Eliom_services.preapply aux_service (version, ((),file)))
@@ -674,7 +676,7 @@ let () =
       register_branch
         ~wiki:tutorial_wiki
 	~template:tutorial_template
-	~manual_resolver:(tutorial_resolver version)
+	~manual_resolver:tutorial_resolver
 	~manual_service:(fun version file ->
           Eliom_services.preapply tutorial_service (version, file))
 	~default_manual_service:(fun file ->
@@ -684,7 +686,7 @@ let () =
 	  Eliom_services.preapply tutorial_aux_service (version, file))
 	~default_aux_service:(fun file ->
 	  Eliom_services.preapply tutorial_aux_default_service file)
-	~aux_resolver:(tutorial_aux_resolver version)
+	~aux_resolver:tutorial_aux_resolver
         ~versions:[version]
 	tutorial_last (* Last stable version *)
 	version) (* default branch name *)
