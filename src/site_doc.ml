@@ -16,6 +16,7 @@ let ocsimore_id = 18
 let obrowser_id = 9
 let ocsforge_id = 24
 let tyxml_id = 66
+let macaque_id = 25
 
 let projects = [
 
@@ -23,16 +24,26 @@ let projects = [
 
   (** Eliom *)
 
+(* (branch name,
+    template page,
+    default page,
+    version list,
+    long branch name (only if we want a special entry in the menu) 
+      and order of appearance in menu,
+    subdirectories for API doc (optional, for example Eliom client API and server API))
+*)
+
   eliom_id,
   [
-   "dev"    , "manualTemplate", "services", ["1.91"], Some (2, "Development branch"),
+   "dev"    , "manualTemplate", "intro", [], Some (2, "Dev"),
       Some [["server"];["client"]];
-   "1.3-dev", "manualTemplate", "intro"   , ["1.3.4";"1.3.3";"1.3.2";"1.3.1";"1.3.0"],
-     Some (1, "Latest 1.3 (stable)"), None;
+   "2.0-dev", "manualTemplate", "intro", ["2.0"], Some (1, "Stable branch"),
+      Some [["server"];["client"]];
+   "1.3-dev", "manualTemplate", "intro"   , ["1.3.4";"1.3.3";"1.3.2";"1.3.1";"1.3.0"], None, None;
    "1.0-dev", "manualTemplate", "intro"   , ["1.1.0";"1.0.0"], None, None;
    "1.2-dev", "manualTemplate", "intro"   , ["1.2.2";"1.2.1";"1.2.0"], None, None;
   ],
-  "1.3.4", (* last stable version *)
+  "2.0", (* last stable version *)
   "manualUnknownVersion",
   303l, (* 404 wiki box *)
   303l; (* 403 wiki box FIXME *)
@@ -41,13 +52,13 @@ let projects = [
 
   server_id,
   [
-   "dev"    , "manualTemplate", "quickstart", ["1.91"], Some (2, "Development branch"), None;
+   "dev"    , "manualTemplate", "quickstart", ["2.0"], Some (1, "Stable branch"), None;
    "1.3-dev", "manualTemplate", "intro"     , ["1.3.4";"1.3.3";"1.3.2";"1.3.1";"1.3.0"],
-     Some (1, "Latest 1.3 (stable)"), None;
+     None, None;
    "1.2-dev", "manualTemplate", "intro"     , ["1.2.2";"1.2.1";"1.2.0"], None, None;
    "1.0-dev", "manualTemplate", "intro"     , ["1.1.0";"1.0.0"], None, None;
   ],
-  "1.3.4", (* last stable version *)
+  "2.0", (* last stable version *)
   "manualUnknownVersion",
   311l, (* 404 wiki box *)
   311l; (* 403 wiki box FIXME *)
@@ -56,10 +67,10 @@ let projects = [
 
   lwt_id,
   [
-   "dev", "manualTemplate", "manual", ["2.3.0";"2.2.1";"2.2.0"], Some (1, "Stable branch"), None;
+   "dev", "manualTemplate", "manual", ["2.3.1";"2.3.0";"2.2.1";"2.2.0"], Some (1, "Stable branch"), None;
    "old", "manualTemplate", "manual", ["2.1.1";"2.1.0";"2.0.0";"1.1.0";"1.0.0"], None, None;
   ],
-  "2.3.0", (* last stable version *)
+  "2.3.1", (* last stable version *)
   "manualUnknownVersion",
   317l, (* 404 wiki box *)
   317l; (* 403 wiki box FIXME *)
@@ -68,9 +79,9 @@ let projects = [
 
   js_of_ocaml_id,
   [
-   "dev", "manualTemplate", "intro", ["1.0.2";"1.0.1";"1.0.0"], Some (1, "Stable branch"), None;
+   "dev", "manualTemplate", "intro", ["1.0.4";"1.0.3";"1.0.2";"1.0.1";"1.0.0"], Some (1, "Stable branch"), None;
   ],
-  "1.0.2", (* last stable version *)
+  "1.0.4", (* last stable version *)
   "manualUnknownVersion",
   322l, (* 404 wiki box *)
   322l; (* 403 wiki box FIXME *)
@@ -112,12 +123,24 @@ let projects = [
 
   tyxml_id,
   [
-  "dev", "manualTemplate", "intro", [], Some (1, "Development branch"), None;
+  "dev", "manualTemplate", "intro", ["2.0"], Some (1, "Stable branch"), None;
   ],
-  "dev",
+  "2.0",
   "manualUnknownVersion",
   346l, (* 404 wiki box *)
   346l; (* 403 wiki box FIXME *)
+
+  (** Macaque *)
+
+  macaque_id,
+  [
+  "dev", "manualTemplate", "intro", [], Some (1, "Development branch"), None;
+  ],
+  "dev", (* last stable version *)
+  "manualUnknownVersion",
+  346l, (* 404 wiki box *)
+  346l; (* 403 wiki box FIXME *)
+
 ]
 
 (** 'Tutorial' est un cas spécial. *)
