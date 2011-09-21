@@ -14,6 +14,8 @@ ELIOMCFLAGS := -I _server/src
 ELIOMOPTFLAGS := -I _server/src
 ELIOMDEPFLAGS_SERVER := -I src
 
+OCSIMORE_STATIC ?= /var/www/ocsimore/static
+
 ###
 
 all: local byte opt
@@ -41,7 +43,7 @@ local/var/www/static/:
 	cp $$(ocamlfind query ocsimore)/ocsimore.js $@
 local/var/www/ocsimore_static:
 	mkdir -p $@
-	cp /opt/ocsigen/src/ocsimore/local/var/www/static/* $@
+	cp ${OCSIMORE_STATIC}/* $@
 
 ${DIRS}:
 	mkdir -p $@
@@ -73,7 +75,7 @@ install::
 	  sudo -u www-data find -type l -exec cp -d {} ${INSTALL_DIR}/static/{} \;
 	install -d -m 775 ${INSTALL_USER} ${INSTALL_DIR}/ocsimore_static
 	install -m 664 ${INSTALL_USER} \
-	  /opt/ocsigen/src/ocsimore/local/var/www/static/* \
+	  ${OCSIMORE_STATIC}/* \
 	  ${INSTALL_DIR}/ocsimore_static
 	install -m 644 ${INSTALL_USER} \
 	  /opt/ocsigen/src/ocsimore/_build/src/site/client/ocsimore.js \
