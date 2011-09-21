@@ -20,8 +20,8 @@ open Eliom_pervasives
 
 (** Extension wikifile *)
 
-let repository_default    = "/var/www/darcs"
-let repository_restricted = "/var/www/restricted"
+let repository_default    = "/var/www/data/darcs"
+let repository_restricted = "/var/www/data/restricted"
 
 let get_repository bi args =
   try match List.assoc "repository" args with

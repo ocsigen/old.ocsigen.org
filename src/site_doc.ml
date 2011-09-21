@@ -1,8 +1,8 @@
 
 (** ... *)
 
-let manual_wiki_dir = "/var/www/ocsigen_org/manualwiki"
-let api_wiki_dir    = "/var/www/ocsigen_org/apiwiki"
+let manual_wiki_dir = "/var/www/data/manualwiki"
+let api_wiki_dir    = "/var/www/data/apiwiki"
 
 (** Documentation des projets. *)
 
