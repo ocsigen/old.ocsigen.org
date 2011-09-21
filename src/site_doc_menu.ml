@@ -99,25 +99,25 @@ let get_relative_path_in_wiki bi project service =
 
 let append_version b bi level version title =
   let title =  if title = Site_doc.stable_version_name then "last stable" else title in
-    let project = version.Site_doc.branch.Site_doc.br_project in
-    let wiki_id = Wiki_types.string_of_wiki project.Site_doc.wiki in
-    let manual = version.Site_doc.manual_service [""] in
-    let api = version.Site_doc.api_service [""] in
-    try
-      ignore (version.Site_doc.api_resolver ["index"]);
+  let project = version.Site_doc.branch.Site_doc.br_project in
+  let wiki_id = Wiki_types.string_of_wiki project.Site_doc.wiki in
+  let manual = version.Site_doc.manual_service [""] in
+  let api = version.Site_doc.api_service [""] in
+  try
+    ignore (version.Site_doc.api_resolver ["index"]);
+    Format.bprintf b
+      ("%s[[wiki(%s):%s|%s]]\n" ^^
+       "=%s[[wiki(%s):%s|Manual]]\n" ^^
+       "=%s[[wiki(%s):%s|API Reference]]\n")
+      level wiki_id (get_relative_path_in_wiki bi project manual) title
+      level wiki_id (get_relative_path_in_wiki bi project manual)
+      level wiki_id (get_relative_path_in_wiki bi project api)
+  with
+  | _ ->
       Format.bprintf b
-	("%s[[wiki(%s):%s|%s]]\n" ^^
-	    "=%s[[wiki(%s):%s|Manual]]\n" ^^
-	    "=%s[[wiki(%s):%s|API Reference]]\n")
+	"%s[[wiki(%s):%s|%s]]\n"
 	level wiki_id (get_relative_path_in_wiki bi project manual) title
-	level wiki_id (get_relative_path_in_wiki bi project manual)
-	level wiki_id (get_relative_path_in_wiki bi project api)
-    with
-      | _ ->
-	Format.bprintf b
-	  "%s[[wiki(%s):%s|%s]]\n"
-	  level wiki_id (get_relative_path_in_wiki bi project manual) title
-
+	
 let build_version b bi level version =
   append_version b bi level version version.Site_doc.version
 

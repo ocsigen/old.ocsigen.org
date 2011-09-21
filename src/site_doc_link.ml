@@ -145,7 +145,7 @@ let get_subproject bi version args =
 let do_pdfonly bi args contents =
   `Phrasing_without_interactive (Lwt.return [])
 
-let _ =
+let () =
   Wiki_syntax.register_wiki_phrasing_extension ~name:"pdfonly" { Wiki_syntax.ppp = do_pdfonly }
 
 
@@ -158,9 +158,15 @@ let do_webonly bi args contents =
   | None -> `Phrasing_without_interactive (Lwt.return [])
   | Some contents -> `Flow5 contents
 
-let _ =
-  Wiki_syntax.register_wiki_extension ~name:"webonly" do_webonly
-
+let () =
+  Wiki_syntax.register_wiki_flow_extension ~reduced:false ~name:"webonly"
+    { Wiki_syntax.fpp = do_webonly };
+  Wiki_syntax.register_wiki_extension
+   ~name:"webonly"
+   ~wp:Wiki_syntax.phrasing_wikicreole_parser
+   ~wp_rec:Wiki_syntax.phrasing_wikicreole_parser
+   ~ni_plugin:do_webonly
+   do_webonly
 
 
 
@@ -209,10 +215,10 @@ let do_manual_link bi args contents =
   in
   Lwt.return [a]
 
-let _ =
+let () =
   register "a_manual" do_manual_link
 
-(* let _ = register_inline "a_manual" do_manual_link *)
+(* let () = register_inline "a_manual" do_manual_link *)
 
 
 
@@ -254,7 +260,7 @@ let do_aux_link bi args contents =
       ?fragment contents	() in
   Lwt.return [a]
 
-let _ = register "a_file" do_aux_link
+let () = register "a_file" do_aux_link
 
 let do_aux_img bi args contents =
 
@@ -278,7 +284,7 @@ let do_aux_img bi args contents =
       ~service:(version.Site_doc.aux_service (Neturl.split_path src)) () in
   Lwt.return [ HTML5.M.img ~src ~alt () ]
 
-let _ = register "a_img" do_aux_img
+let () = register "a_img" do_aux_img
 
 let do_aux_script bi args contents =
 
@@ -300,7 +306,7 @@ let do_aux_script bi args contents =
 		 ~a:[ HTML5.M.a_mime_type typ; HTML5.M.a_src src ]
 		 (HTML5.M.cdata_script "") ]
 
-let _ = register "a_script" do_aux_script
+let () = register "a_script" do_aux_script
 
 
 
@@ -434,7 +440,7 @@ let do_api_link prefix bi args contents =
       [HTML5.M.pcdata body] () in
   Lwt.return [a]
 
-let _ = register "a_api" (do_api_link None)
-let _ = register "a_api_type" (do_api_link (Some "type_"))
-let _ = register "a_api_code" (do_api_link (Some "code_"))
+let () = register "a_api" (do_api_link None)
+let () = register "a_api_type" (do_api_link (Some "type_"))
+let () = register "a_api_code" (do_api_link (Some "code_"))
 
