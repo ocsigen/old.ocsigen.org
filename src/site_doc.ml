@@ -314,7 +314,7 @@ let register_branch ~wiki ~template
     ?(manual_resolver = fun _ -> raise Wiki_dir.Undefined)
     ?(manual_service = fun _ _ -> raise Wiki_dir.Undefined)
     ?(default_manual_service = fun _ -> raise Wiki_dir.Undefined)
-    ?(manual_menu = fun () -> raise Wiki_dir.Undefined)
+    ?(manual_menu = fun _ () -> raise Wiki_dir.Undefined)
     ?(aux_resolver = fun _ -> raise Wiki_dir.Undefined)
     ?(aux_service = fun _ _ -> raise Wiki_dir.Undefined)
     ?(default_aux_service = fun _ -> raise Wiki_dir.Undefined)
@@ -346,7 +346,7 @@ let register_branch ~wiki ~template
     branch = branch;
     manual_resolver = manual_resolver name;
     manual_service = (manual_service name :> string list -> wiki_service);
-    manual_menu = manual_menu;
+    manual_menu = manual_menu name;
     aux_resolver = aux_resolver name;
     aux_service = (aux_service name :> string list -> wiki_service);
     api_resolver = api_resolver name;
@@ -357,7 +357,7 @@ let register_branch ~wiki ~template
     branch = branch;
     manual_resolver = manual_resolver src_name;
     manual_service = (manual_service src_name :> string list -> wiki_service);
-    manual_menu = manual_menu;
+    manual_menu = manual_menu src_name;
     aux_resolver = aux_resolver src_name;
     aux_service = (aux_service src_name :> string list -> wiki_service);
     api_resolver = api_resolver src_name;
@@ -373,7 +373,7 @@ let register_branch ~wiki ~template
       branch = branch;
       manual_resolver = manual_resolver name;
       manual_service = (manual_service v :> string list -> wiki_service);
-      manual_menu = manual_menu;
+      manual_menu = manual_menu name;
       aux_resolver = aux_resolver name;
       aux_service = (aux_service v :> string list -> wiki_service);
       api_resolver = api_resolver v;
@@ -388,7 +388,7 @@ let register_branch ~wiki ~template
 	branch = branch;
 	manual_resolver = manual_resolver name;
 	manual_service = (default_manual_service :> string list -> wiki_service);
-	manual_menu = manual_menu;
+	manual_menu = manual_menu name;
 	aux_resolver = aux_resolver name;
 	aux_service = (default_aux_service :> string list -> wiki_service);
 	api_resolver = api_resolver last_stable_version;
@@ -557,7 +557,7 @@ let register_project_data (id, branches, last_stable, template_404, wb404, wb403
 	  Eliom_services.preapply manual_service (version, ((),file)))
       ~default_manual_service:
         (fun file -> Eliom_services.preapply default_manual_service ((),file))
-      ~manual_menu:(fun () -> manual_resolver project branch ["menu"])
+      ~manual_menu:(fun branch () -> manual_resolver project branch ["menu"])
       ~aux_resolver:(fun branch -> aux_resolver project branch)
       ~aux_service:
         (fun version file ->
@@ -685,7 +685,7 @@ let () =
           Eliom_services.preapply tutorial_service (version, file))
 	~default_manual_service:(fun file ->
           Eliom_services.preapply tutorial_default_service file)
-	~manual_menu:(fun () -> tutorial_resolver version ["menu"])
+	~manual_menu:(fun version () -> tutorial_resolver version ["menu"])
 	~aux_service:(fun version file ->
 	  Eliom_services.preapply tutorial_aux_service (version, file))
 	~default_aux_service:(fun file ->
