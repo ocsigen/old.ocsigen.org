@@ -153,8 +153,8 @@ let tutorial_id = 36
 let tutorial_template = "tutorialTemplate"
 let tutorial_default = "intro"
 
-let tutorial_version = ["1.91"; "2.0-rc1"; "dev"]
-let tutorial_last = "2.0-rc1"
+let tutorial_version = ["2.0"; "dev"]
+let tutorial_last = "2.0"
 
 let tutorial_wb404 = Wiki_types.wikibox_of_sql 295l
 let tutorial_wb403 = Wiki_types.wikibox_of_sql 295l
@@ -641,13 +641,15 @@ let tutorial_default_service =
 
 let tutorial_aux_service =
   Eliom_output.Any.register_service
-    ~path:(tutorial_path @ ["files"])
+    ~path:(tutorial_path)
     ~priority:10
     ~get_params:
     (Eliom_parameters.suffix
        (Eliom_parameters.prod
           (Eliom_parameters.string "version")
-          (Eliom_parameters.all_suffix "file")))
+	  (Eliom_parameters.prod
+	     (Eliom_parameters.suffix_const "files")
+             (Eliom_parameters.all_suffix "file"))))
     (fun (version, file) () ->
       set_current_version version;
       Wiki_menu.set_menu_resolver (tutorial_resolver version);
