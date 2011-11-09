@@ -521,7 +521,7 @@ let register_project_data (id, branches, last_stable, template_404, wb404, wb403
   let _ =
     (* redirect <project>/<version>/ to <project>/<version>/manual/ *)
     Eliom_output.Redirection.register_service
-      ~options:`Permanent
+      ~options:`MovedPermanently
       ~path
       ~priority:10
       ~get_params:(Eliom_parameters.suffix
