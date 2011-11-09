@@ -176,7 +176,7 @@ let do_concept bi args xml =
        [ HTML5.M.aside
            ~a:[HTML5.M.a_class ["concept"]]
            ( HTML5.M.header [HTML5.M.h5 [HTML5.M.span
-					   ~a:[HTML5.M.a_style "display: none;"]
+					   ~a:[HTML5.M.a_class ["concept_prefix"]]
 					   [HTML5.M.pcdata "Concept: "];
 					 HTML5.M.pcdata title]]
 	     :: xml ) ])
