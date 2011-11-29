@@ -52,7 +52,7 @@ let projects = [
 
   server_id,
   [
-   "dev"    , "manualTemplate", "quickstart", ["2.0.1";"2.0"], Some (1, "Stable branch"), None;
+   "dev"    , "manualTemplate", "quickstart", ["2.0.2";"2.0.1";"2.0"], Some (1, "Stable branch"), None;
    "1.3-dev", "manualTemplate", "intro"     , ["1.3.4";"1.3.3";"1.3.2";"1.3.1";"1.3.0"],
      None, None;
    "1.2-dev", "manualTemplate", "intro"     , ["1.2.2";"1.2.1";"1.2.0"], None, None;
@@ -67,7 +67,7 @@ let projects = [
 
   lwt_id,
   [
-   "dev", "manualTemplate", "manual", ["2.3.1";"2.3.0";"2.2.1";"2.2.0"], Some (1, "Stable branch"), None;
+   "dev", "manualTemplate", "manual", ["2.3.2";"2.3.1";"2.3.0";"2.2.1";"2.2.0"], Some (1, "Stable branch"), None;
    "old", "manualTemplate", "manual", ["2.1.1";"2.1.0";"2.0.0";"1.1.0";"1.0.0"], None, None;
   ],
   "2.3.1", (* last stable version *)
@@ -80,10 +80,10 @@ let projects = [
   js_of_ocaml_id,
   [
    "dev", "manualTemplate", "intro",
-   ["1.0.6";"1.0.5";"1.0.4"], Some (1,
+   ["1.0.8";"1.0.6";"1.0.5"], Some (1,
    "Stable branch"), None;
    "old", "manualTemplate", "intro",
-   ["1.0.3";"1.0.2";"1.0.1";"1.0.0"], None , None;
+   ["1.0.4";"1.0.3";"1.0.2";"1.0.1";"1.0.0"], None , None;
   ],
   "1.0.6", (* last stable version *)
   "manualUnknownVersion",
@@ -127,7 +127,7 @@ let projects = [
 
   tyxml_id,
   [
-  "dev", "manualTemplate", "intro", ["2.0"], Some (1, "Stable branch"), None;
+  "dev", "manualTemplate", "intro", ["2.0.1";"2.0"], Some (1, "Stable branch"), None;
   ],
   "2.0",
   "manualUnknownVersion",
