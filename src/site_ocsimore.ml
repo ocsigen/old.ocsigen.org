@@ -186,3 +186,20 @@ let _ =
     ~name:"concept" ~reduced:false { Wiki_syntax.fpp = do_concept }
 
 
+(* Paragraph *)
+
+let do_paragraph bi args xml =
+  `Flow5
+    (lwt xml = match xml with
+       | Some c -> (c :> _ HTML5.M.elt list Lwt.t)
+       | None -> Lwt.return [] in
+     Lwt.return
+       [ HTML5.M.div
+           ~a:[HTML5.M.a_class ["paragraph"]]
+          xml ])
+
+let _ =
+  Wiki_syntax.register_wiki_flow_extension
+    ~reduced:false
+    ~name:"paragraph"
+    { Wiki_syntax.fpp = do_paragraph }
