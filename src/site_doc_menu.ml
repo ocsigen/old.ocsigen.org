@@ -11,7 +11,7 @@ let register name f =
 let build_api_tree bi version file =
   Wiki_menu.build_tree_from_file bi
     ~create_service:(fun ?wiki file ->
-      (version.Site_doc.api_service file :> Eliom_tools_common.get_page))
+      (version.Site_doc.api_service file :> Eliom_tools.get_page))
     ~file
 
 let build_api_trees bi version =
@@ -33,7 +33,7 @@ let build_manual_tree bi branch =
       Wiki_menu.build_tree_from_file bi
 	~file:(branch.Site_doc.manual_menu ())
 	~create_service:(fun ?wiki file ->
-	  (branch.Site_doc.manual_service file :> Eliom_tools_common.get_page))
+	  (branch.Site_doc.manual_service file :> Eliom_tools.get_page))
     with
     | Wiki_dir.Undefined | Ocsigen_local_files.Failed_404 -> Lwt.return []
     | exc ->
@@ -47,7 +47,7 @@ let build_doctree ?service bi version =
   build_manual_tree bi version >>= fun manual_tree ->
   Lwt.return (Eliom_tools.Html5.hierarchical_menu_depth_first
                 ~classe:["doctree"; "manualapitree"]
-		(Eliom_tools_common.Not_clickable, manual_tree @ api_tree)
+		(Eliom_tools.Not_clickable, manual_tree @ api_tree)
 		~whole_tree:true
 		?service
 		())
@@ -56,7 +56,7 @@ let build_apitree ?service bi version =
   build_api_trees bi version >>= fun api_tree ->
   Lwt.return (Eliom_tools.Html5.hierarchical_menu_depth_first
                 ~classe:["doctree"; "apitree"]
-		(Eliom_tools_common.Not_clickable, api_tree)
+		(Eliom_tools.Not_clickable, api_tree)
 		~whole_tree:true
 		?service
 		())
@@ -65,7 +65,7 @@ let build_manualtree ?service bi version =
   build_manual_tree bi version >>= fun manual_tree ->
   Lwt.return (Eliom_tools.Html5.hierarchical_menu_depth_first
                 ~classe:["doctree"; "manualtree"]
-		(Eliom_tools_common.Not_clickable, manual_tree)
+		(Eliom_tools.Not_clickable, manual_tree)
 		~whole_tree:true
 		?service
 		())
