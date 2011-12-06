@@ -68,7 +68,7 @@ let do_script bi args c =
       Lwt.return
 	[ HTML5.M.script
 	    ~a:[ HTML5.M.a_mime_type "text/javascript";
-		 HTML5.M.a_src script]
+		 HTML5.M.a_src (XML.uri_of_string script)]
 	    (HTML5.M.cdata_script "") ]
     with Not_found ->
       let content =
@@ -93,7 +93,7 @@ let atom_header =
     (fun () ->
       [ HTML5.M.link
 	  ~rel:[`Alternate]
-	  ~href:"http://ocsigen.org/news.atom"
+	  ~href:(XML.uri_of_string "http://ocsigen.org/news.atom")
 	  ~a:[ HTML5.M.a_title "Ocsigen news";
 	       HTML5.M.a_mime_type "application/atom+xml"; ]
 	  () ])

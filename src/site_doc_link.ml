@@ -280,7 +280,7 @@ let do_aux_img bi args contents =
 
   (* Build URL *)
   let src =
-    Eliom_output.Html5.make_string_uri
+    Eliom_output.Html5.make_uri
       ~service:(version.Site_doc.aux_service (Neturl.split_path src)) () in
   Lwt.return [ HTML5.M.img ~src ~alt () ]
 
@@ -300,7 +300,7 @@ let do_aux_script bi args contents =
   (* Build URL *)
   let typ = "text/javascript" in
   let src =
-    Eliom_output.Html5.make_string_uri
+    Eliom_output.Html5.make_uri
       ~service:(version.Site_doc.aux_service (Neturl.split_path src)) () in
   Lwt.return [ HTML5.M.script
 		 ~a:[ HTML5.M.a_mime_type typ; HTML5.M.a_src src ]
