@@ -33,6 +33,7 @@
       </eliom>
       <eliom findlib-package="ocsimore.wiki_site" />
       <eliom findlib-package="ocsimore.forum_site" />
+      <eliom findlib-package="ocsforge" />
       <eliom module="%%SRC%%/%%LIBDIR%%/%%APPNAME%%.cma" />
     </host>
 
