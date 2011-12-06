@@ -650,7 +650,7 @@ let tutorial_aux_service =
 	  (Eliom_parameters.prod
 	     (Eliom_parameters.suffix_const "files")
              (Eliom_parameters.all_suffix "file"))))
-    (fun (version, file) () ->
+    (fun (version, ((), file)) () ->
       set_current_version version;
       Wiki_menu.set_menu_resolver (tutorial_resolver version);
       Wiki_dir.process_auxfile
@@ -689,7 +689,7 @@ let () =
           Eliom_services.preapply tutorial_default_service file)
 	~manual_menu:(fun version () -> tutorial_resolver version ["menu"])
 	~aux_service:(fun version file ->
-	  Eliom_services.preapply tutorial_aux_service (version, file))
+	  Eliom_services.preapply tutorial_aux_service (version, ((), file)))
 	~default_aux_service:(fun file ->
 	  Eliom_services.preapply tutorial_aux_default_service file)
 	~aux_resolver:tutorial_aux_resolver
