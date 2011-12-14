@@ -117,7 +117,7 @@ let append_version b bi level version title =
       Format.bprintf b
 	"%s[[wiki(%s):%s|%s]]\n"
 	level wiki_id (get_relative_path_in_wiki bi project manual) title
-	
+
 let build_version b bi level version =
   append_version b bi level version version.Site_doc.version
 
