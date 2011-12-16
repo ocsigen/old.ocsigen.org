@@ -14,6 +14,8 @@ ELIOMCFLAGS := -I _server/src
 ELIOMOPTFLAGS := -I _server/src
 ELIOMDEPFLAGS_SERVER := -I src
 
+-include Makefile.local
+
 OCSIMORE_STATIC ?= /var/www/ocsimore/static
 
 ###

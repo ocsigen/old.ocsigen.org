@@ -1,0 +1,52 @@
+
+To run the ocsigen website site localy:
+
+* Replicate the ocsigen.org database or setup a connection with the
+  database of 'ocsigen-build'. (See below)
+* Compile and install eliom, ocsimore and ocsforge.
+* In Makefile.local adjust OCSIMORE_STATIC to the path of your
+  ocsimore statis files directory (it's usually /var/www/ocsimore or
+  local/var/www/static in the source of ocsimore)
+* {{{make run.local}}}. Default port is 8080.
+* If something fails {{{make distclean}}}
+
+=== Setup an ssh tunnel with the database of 'ocsigen-build'
+
+In .ssh/config:
+
+  Host ocsigen-build
+  ProxyCommand ssh ocsigen.org nc -q 0 %h %p
+  LocalForward 5433 localhost:5432
+
+Then extend in your environment with:
+
+  export PGHOST=localhost
+  export PGPORT=5433
+
+You may add those variables in 'Makefile.local' and in the bundle's
+'Makefile.local.
+
+To test the tunnel, run:
+
+  psql -U ocsimore ocsimore
+
+=== Duplicating the database
+
+On ocsigen.org:
+
+  pg_dump -U ocsimore ocsimore  > db.dump
+
+On your host:
+
+  sudo -u postgres dropdb ocsimore
+  sudo -u postgres createdb -E UTF-8 -T template0 -O ocsimore ocsimore
+  createlang -U ocsimore plpgsql ocsimore
+  psql -U ocsimore ocsimore -f db.dump
+
+=== FAQ
+
+- A "Not_found exception" is uncatched when I launch the server.
+
+  You're database doesn't contain the projects' wiki (eliom,...).
+  They are "hardcoded" in src/site_doc.ml until the "documentation
+  wiki extensions" are merged into ocsforge.
