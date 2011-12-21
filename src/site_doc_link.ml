@@ -113,6 +113,15 @@ let get_project_and_version bi args =
 let get_project_version bi args =
   get_project_and_version bi args >|= Site_doc.find_version
 
+let get_height ~default bi args =
+  try int_of_string (List.assoc "height" args)
+  with _ -> default
+
+let get_width ~default bi args =
+  try int_of_string (List.assoc "width" args)
+  with _ -> default
+
+
 let get_src bi args =
   try Lwt.return (List.assoc "src" args)
   with Not_found -> Lwt.fail (Site_doc.Error "no \"src\" option.")
@@ -286,27 +295,25 @@ let do_aux_img bi args contents =
 
 let () = register "a_img" do_aux_img
 
-let do_aux_script bi args contents =
+let do_aux_iframe bi args contents =
 
   (* Get arguments *)
+  let attribs = Wiki_syntax.parse_common_attribs args in
+  let height = get_height ~default:480 bi args in
+  let width = get_width ~default:625 bi args in
   lwt src = get_src bi args in
   lwt version = get_project_version bi args in
-  lwt fragment = get_opt_fragment bi args in
-
-  (* Check file existence *)
-  (* ignore(version.Site_doc.aux_resolver (Neturl.split_path src) *)
-	   (* ~sp:bi.Wiki_widgets_interface.bi_sp); *)
 
   (* Build URL *)
-  let typ = "text/javascript" in
   let src =
     Eliom_output.Html5.make_uri
       ~service:(version.Site_doc.aux_service (Neturl.split_path src)) () in
-  Lwt.return [ HTML5.M.script
-		 ~a:[ HTML5.M.a_mime_type typ; HTML5.M.a_src src ]
-		 (HTML5.M.cdata_script "") ]
+  Lwt.return [ HTML5.M.iframe
+		 ~a:( HTML5.M.a_src src :: HTML5.M.a_width width
+                      :: HTML5.M.a_height height :: attribs)
+		 [HTML5.M.pcdata ""] ]
 
-let () = register "a_script" do_aux_script
+let () = register "a_iframe" do_aux_iframe
 
 
 
@@ -434,7 +441,7 @@ let do_api_link prefix bi args contents =
   let doc_class = "ocsforge_doclink_" ^ version.Site_doc.branch.Site_doc.br_project.Site_doc.path in
   let a =
     Eliom_output.Html5.a
-      ~a:[HTML5.M.a_class [doc_class]; HTML5.M.a_style "word-space: pre-line;"]
+      ~a:[HTML5.M.a_class [doc_class]; HTML5.M.a_style "white-space: pre-line;"]
       ~service:(version.Site_doc.api_service (sub @ [path_of_id ?prefix id]))
       ?fragment:(fragment_of_id id)
       [HTML5.M.pcdata body] () in
