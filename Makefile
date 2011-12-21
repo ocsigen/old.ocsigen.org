@@ -14,9 +14,7 @@ ELIOMCFLAGS := -I _server/src
 ELIOMOPTFLAGS := -I _server/src
 ELIOMDEPFLAGS_SERVER := -I src
 
--include Makefile.local
-
-OCSIMORE_STATIC ?= /var/www/ocsimore/static
+OCSIMORE_STATIC := ../ocsimore/local/var/www/static/
 
 ###
 
@@ -38,14 +36,14 @@ DIRS = local/var/lib/ocsidbm local/var/run local/var/log \
 
 local: ${DIRS} local/var/www/static local/var/www/ocsimore_static
 
-local/var/www/static/:
+local/var/www/static:
 	mkdir -p $@
 	sh files/update-symlinks.sh
 	cd files/data && for f in $$(ls); do ln -s ../../../../files/data/$$f ../../local/var/www/static/; done
-	cp $$(ocamlfind query ocsimore)/ocsimore.js $@
+	ln -s $$(ocamlfind query ocsimore)/ocsimore.js $@/
 local/var/www/ocsimore_static:
-	mkdir -p $@
-	cp ${OCSIMORE_STATIC}/* $@
+	mkdir -p $(basename local/var/www)
+	ln -s ../../../${OCSIMORE_STATIC} $@
 
 ${DIRS}:
 	mkdir -p $@
