@@ -79,10 +79,10 @@ let projects = [
 
   js_of_ocaml_id,
   [
-   "dev", "manualTemplate", "intro",
+   "dev", "manualTemplate", "overview",
    ["1.0.9"], Some (1,
    "Stable branch"), None;
-   "old", "manualTemplate", "intro",
+   "old", "manualTemplate", "overview",
    ["1.0.8";"1.0.6";"1.0.5";"1.0.4";"1.0.3";"1.0.2";"1.0.1";"1.0.0"], None , None;
   ],
   "1.0.9", (* last stable version *)
