@@ -529,7 +529,10 @@ let register_project_data (id, branches, last_stable, template_404, wb404, wb403
 			(Eliom_parameters.string "version")
 			(Eliom_parameters.suffix_const "")))
       (fun (version,()) () ->
-	Lwt.return (Eliom_services.preapply manual_service (version, ((), [""])))) in
+	if List.exists (fun (name, _, _, versions, _, _) -> name = version || List.exists ((=) version) versions) branches then
+	  Lwt.return (Eliom_services.preapply manual_service (version, ((), [""])))
+	else
+	  Lwt.fail Eliom_common.Eliom_404) in
 
   let manual_resolver project ?default branch =
     let manual_dir =
