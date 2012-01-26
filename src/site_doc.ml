@@ -439,6 +439,7 @@ let register_project_data (id, branches, last_stable, template_404, wb404, wb403
     let version = find_version (wiki, Some version) in
     Wiki_menu.set_menu_resolver version.manual_resolver;
     Wiki_dir.process_auxfile
+      ~options:2678400
       ~wiki ~template:version.branch.br_template
       ~wb404 ~wb403
       version.aux_resolver file in
@@ -657,6 +658,7 @@ let tutorial_aux_service =
       set_current_version version;
       Wiki_menu.set_menu_resolver (tutorial_resolver version);
       Wiki_dir.process_auxfile
+	~options:2678400
 	~wiki:tutorial_wiki ~template:tutorial_template
 	~wb404:tutorial_wb404 ~wb403:tutorial_wb403
 	(tutorial_aux_resolver version) file)
@@ -671,6 +673,7 @@ let tutorial_aux_default_service =
       set_current_version stable_version_name;
       Wiki_menu.set_menu_resolver (tutorial_resolver tutorial_last);
       Wiki_dir.process_auxfile
+	~options:2678400
 	~wiki:tutorial_wiki ~template:tutorial_template
 	~wb404:tutorial_wb404 ~wb403:tutorial_wb403
 	(tutorial_aux_resolver tutorial_last) file)
