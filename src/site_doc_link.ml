@@ -7,14 +7,19 @@ open Eliom_pervasives
     de pdf. *)
 
 let register name f =
-  Wiki_syntax.raw_register_wiki_extension ~name
-    ~wp:Wiki_syntax.wikicreole_parser (Site_doc.wrap_phrasing name f);
-  Wiki_syntax.raw_register_wiki_extension ~name
-    ~wp:Wiki_syntax.wikicreole_parser_without_header_footer (Site_doc.wrap_phrasing name f);
-  Wiki_syntax.raw_register_wiki_extension ~name
-    ~wp:Wiki_syntax.phrasing_wikicreole_parser (Site_doc.wrap_phrasing name f);
-  Wiki_syntax.raw_register_wiki_extension ~name
-    ~wp:Wiki_syntax.menu_parser (Site_doc.wrap_phrasing name f)
+  let wp_rec = Wiki_syntax.phrasing_wikicreole_parser in
+  Wiki_syntax.register_raw_wiki_extension ~name
+    ~wp:Wiki_syntax.wikicreole_parser
+    ~wp_rec (fun _ -> Site_doc.wrap_phrasing name f);
+  Wiki_syntax.register_raw_wiki_extension ~name
+    ~wp:Wiki_syntax.wikicreole_parser_without_header_footer
+    ~wp_rec (fun _ -> Site_doc.wrap_phrasing name f);
+  Wiki_syntax.register_raw_wiki_extension ~name
+    ~wp:Wiki_syntax.phrasing_wikicreole_parser
+    ~wp_rec (fun _ -> Site_doc.wrap_phrasing name f);
+  Wiki_syntax.register_raw_wiki_extension ~name
+    ~wp:Wiki_syntax.menu_parser
+    ~wp_rec (fun _ -> Site_doc.wrap_phrasing name f)
 
 
 (** Comment construire l'URL d'un identificateur OCaml dans l'API? *)
