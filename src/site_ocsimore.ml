@@ -101,8 +101,10 @@ let atom_header =
 let add_atom_header () = Page_site.Header.require_header atom_header
 
 let do_atom bi args c =
-  add_atom_header ();
-  `Flow5 (Lwt.return [])
+  `Flow5 (
+    lwt () = add_atom_header () in
+    Lwt.return []
+  )
 
 let _ =
   Wiki_syntax.register_simple_flow_extension ~name:"atom" ~reduced:false do_atom

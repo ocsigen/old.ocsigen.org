@@ -428,7 +428,7 @@ let register_project_data (id, branches, last_stable, template_404, wb404, wb403
   let process_manual (version, ((), file)) () =
     set_current_version version;
     let version = find_version (wiki, Some version) in
-    Wiki_menu.set_menu_resolver version.manual_resolver;
+    lwt () = Wiki_menu.set_menu_resolver version.manual_resolver in
     Wiki_dir.process_wikifile
       ~wiki ~template:version.branch.br_template
       ~wb404 ~wb403
@@ -437,7 +437,7 @@ let register_project_data (id, branches, last_stable, template_404, wb404, wb403
   let process_aux (version, ((), file)) () =
     set_current_version version;
     let version = find_version (wiki, Some version) in
-    Wiki_menu.set_menu_resolver version.manual_resolver;
+    lwt () = Wiki_menu.set_menu_resolver version.manual_resolver in
     Wiki_dir.process_auxfile
       ~options:2678400
       ~wiki ~template:version.branch.br_template
@@ -447,7 +447,7 @@ let register_project_data (id, branches, last_stable, template_404, wb404, wb403
   let process_api (version, ((), file)) () =
     set_current_version version;
     let version = find_version (wiki, Some version) in
-    Wiki_menu.set_menu_resolver version.manual_resolver;
+    lwt () = Wiki_menu.set_menu_resolver version.manual_resolver in
     Wiki_dir.process_wikifile
       ~wiki ~template:version.branch.br_template
       ~wb404 ~wb403
@@ -622,7 +622,7 @@ let tutorial_service =
           (Eliom_parameters.all_suffix "file")))
     (fun (version, file) () ->
       set_current_version version;
-      Wiki_menu.set_menu_resolver (tutorial_resolver version);
+      lwt () = Wiki_menu.set_menu_resolver (tutorial_resolver version) in
       Wiki_dir.process_wikifile
 	~wiki:tutorial_wiki ~template:tutorial_template
 	~wb404:tutorial_wb404 ~wb403:tutorial_wb403
@@ -637,7 +637,7 @@ let tutorial_default_service =
        (Eliom_parameters.all_suffix "file"))
     (fun file () ->
       set_current_version stable_version_name;
-      Wiki_menu.set_menu_resolver (tutorial_resolver tutorial_last);
+      lwt () = Wiki_menu.set_menu_resolver (tutorial_resolver tutorial_last) in
       Wiki_dir.process_wikifile
 	~wiki:tutorial_wiki ~template:tutorial_template
 	~wb404:tutorial_wb404 ~wb403:tutorial_wb403
@@ -656,7 +656,7 @@ let tutorial_aux_service =
              (Eliom_parameters.all_suffix "file"))))
     (fun (version, ((), file)) () ->
       set_current_version version;
-      Wiki_menu.set_menu_resolver (tutorial_resolver version);
+      lwt () = Wiki_menu.set_menu_resolver (tutorial_resolver version) in
       Wiki_dir.process_auxfile
 	~options:2678400
 	~wiki:tutorial_wiki ~template:tutorial_template
@@ -671,7 +671,7 @@ let tutorial_aux_default_service =
     (Eliom_parameters.suffix (Eliom_parameters.all_suffix "file"))
     (fun file () ->
       set_current_version stable_version_name;
-      Wiki_menu.set_menu_resolver (tutorial_resolver tutorial_last);
+      lwt () = Wiki_menu.set_menu_resolver (tutorial_resolver tutorial_last) in
       Wiki_dir.process_auxfile
 	~options:2678400
 	~wiki:tutorial_wiki ~template:tutorial_template
