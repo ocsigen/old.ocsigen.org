@@ -37,13 +37,13 @@ let projects = [
   [
    "dev"    , "manualTemplate", "intro", [], Some (2, "Dev"),
       Some [["server"];["client"]];
-   "2.0-dev", "manualTemplate", "intro", ["2.0.2";"2.0.1";"2.0"], Some (1, "Stable branch"),
+   "2.0-dev", "manualTemplate", "intro", ["2.1.1";"2.0.2";"2.0.1";"2.0"], Some (1, "Stable branch"),
       Some [["server"];["client"]];
-   "1.3-dev", "manualTemplate", "intro"   , ["1.3.4";"1.3.3";"1.3.2";"1.3.1";"1.3.0"], None, None;
-   "1.0-dev", "manualTemplate", "intro"   , ["1.1.0";"1.0.0"], None, None;
-   "1.2-dev", "manualTemplate", "intro"   , ["1.2.2";"1.2.1";"1.2.0"], None, None;
+   "1.3-dev", "manualTemplate", "intro"   , ["1.3.4"], None, None;
+   "1.2-dev", "manualTemplate", "intro"   , ["1.2.2"], None, None;
+   "1.0-dev", "manualTemplate", "intro"   , ["1.1.0"], None, None;
   ],
-  "2.0.2", (* last stable version *)
+  "2.1.1", (* last stable version *)
   "manualUnknownVersion",
   303l, (* 404 wiki box *)
   303l; (* 403 wiki box FIXME *)
@@ -52,13 +52,13 @@ let projects = [
 
   server_id,
   [
-   "dev"    , "manualTemplate", "quickstart", ["2.0.2";"2.0.1";"2.0"], Some (1, "Stable branch"), None;
-   "1.3-dev", "manualTemplate", "intro"     , ["1.3.4";"1.3.3";"1.3.2";"1.3.1";"1.3.0"],
+   "dev"    , "manualTemplate", "quickstart", ["2.0.4"], Some (1, "Stable branch"), None;
+   "1.3-dev", "manualTemplate", "intro"     , ["1.3.4"],
      None, None;
-   "1.2-dev", "manualTemplate", "intro"     , ["1.2.2";"1.2.1";"1.2.0"], None, None;
-   "1.0-dev", "manualTemplate", "intro"     , ["1.1.0";"1.0.0"], None, None;
+   "1.2-dev", "manualTemplate", "intro"     , ["1.2.2"], None, None;
+   "1.0-dev", "manualTemplate", "intro"     , ["1.1.0"], None, None;
   ],
-  "2.0.2", (* last stable version *)
+  "2.0.4", (* last stable version *)
   "manualUnknownVersion",
   311l, (* 404 wiki box *)
   311l; (* 403 wiki box FIXME *)
@@ -80,12 +80,12 @@ let projects = [
   js_of_ocaml_id,
   [
    "dev", "manualTemplate", "overview",
-   ["1.0.9"], Some (1,
+   ["1.1.1"], Some (1,
    "Stable branch"), None;
    "old", "manualTemplate", "overview",
-   ["1.0.8";"1.0.6";"1.0.5";"1.0.4";"1.0.3";"1.0.2";"1.0.1";"1.0.0"], None , None;
+   ["1.0.9";"1.0.8";"1.0.7";"1.0.6"], None , None;
   ],
-  "1.0.9", (* last stable version *)
+  "1.1.1", (* last stable version *)
   "manualUnknownVersion",
   322l, (* 404 wiki box *)
   322l; (* 403 wiki box FIXME *)
@@ -153,8 +153,8 @@ let tutorial_id = 36
 let tutorial_template = "tutorialTemplate"
 let tutorial_default = "intro"
 
-let tutorial_version = ["2.0"; "dev"]
-let tutorial_last = "2.0"
+let tutorial_version = ["dev"]
+let tutorial_last = "dev"
 
 let tutorial_wb404 = Wiki_types.wikibox_of_sql 295l
 let tutorial_wb403 = Wiki_types.wikibox_of_sql 295l
