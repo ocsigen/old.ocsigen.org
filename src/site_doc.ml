@@ -1,6 +1,8 @@
 
 (** ... *)
 
+open Eliom_content
+
 let manual_wiki_dir = "/var/www/data/manualwiki"
 let api_wiki_dir    = "/var/www/data/apiwiki"
 
@@ -164,7 +166,7 @@ let tutorial_wb403 = Wiki_types.wikibox_of_sql 295l
 exception Error of string
 
 let error (msg:string) =
-  Lwt.return [ HTML5.M.span ~a:[HTML5.M.a_class ["doclink_error"]] [HTML5.M.pcdata msg] ]
+  Lwt.return [ Html5.F.span ~a:[Html5.F.a_class ["doclink_error"]] [Html5.F.pcdata msg] ]
 
 let wrap_phrasing name f = fun bi args contents ->
   `Phrasing_without_interactive
@@ -176,7 +178,7 @@ let wrap_phrasing name f = fun bi args contents ->
       | exc ->
          error (Format.sprintf "Error %s: exception %s" name
 		  (Printexc.to_string exc) ) in
-     Lwt.return [HTML5.M.span content])
+     Lwt.return [Html5.F.span content])
 
 let wrap_flow5 name f = fun bi args contents ->
   `Flow5
@@ -206,9 +208,9 @@ let guess_version () =
   | Not_found -> stable_version_name
 
 type wiki_service =
-    (unit, unit, Eliom_services.get_service_kind, [ `WithoutSuffix ],
-     unit, unit, Eliom_services.registrable,
-     Eliom_output.appl_service) Eliom_services.service
+    (unit, unit, Eliom_service.get_service_kind, [ `WithoutSuffix ],
+     unit, unit, Eliom_service.registrable,
+     Eliom_output.appl_service) Eliom_service.service
 
 type project = {
     wiki: Wiki_types.wiki;
@@ -457,66 +459,66 @@ let register_project_data (id, branches, last_stable, template_404, wb404, wb403
     Ocsimore_appl.register_service
       ~path
       ~priority:10
-      ~get_params:(Eliom_parameters.suffix
-		     (Eliom_parameters.prod
-			(Eliom_parameters.string "version")
-			(Eliom_parameters.prod
-			   (Eliom_parameters.suffix_const "manual")
-			   (Eliom_parameters.all_suffix "file"))))
+      ~get_params:(Eliom_parameter.suffix
+		     (Eliom_parameter.prod
+			(Eliom_parameter.string "version")
+			(Eliom_parameter.prod
+			   (Eliom_parameter.suffix_const "manual")
+			   (Eliom_parameter.all_suffix "file"))))
       process_manual in
 
   let default_manual_service =
     Ocsimore_appl.register_service
       ~path
       ~priority:10
-      ~get_params:(Eliom_parameters.suffix
-		     (Eliom_parameters.prod
-			(Eliom_parameters.suffix_const "manual")
-			(Eliom_parameters.all_suffix "file")))
+      ~get_params:(Eliom_parameter.suffix
+		     (Eliom_parameter.prod
+			(Eliom_parameter.suffix_const "manual")
+			(Eliom_parameter.all_suffix "file")))
       (fun arg -> process_manual (stable_version_name, arg)) in
 
   let aux_service =
     Eliom_output.Any.register_service
       ~path
       ~priority:10
-      ~get_params:(Eliom_parameters.suffix
-		     (Eliom_parameters.prod
-			(Eliom_parameters.string "version")
-			(Eliom_parameters.prod
-			   (Eliom_parameters.suffix_const "files")
-			   (Eliom_parameters.all_suffix "file"))))
+      ~get_params:(Eliom_parameter.suffix
+		     (Eliom_parameter.prod
+			(Eliom_parameter.string "version")
+			(Eliom_parameter.prod
+			   (Eliom_parameter.suffix_const "files")
+			   (Eliom_parameter.all_suffix "file"))))
       process_aux in
 
   let default_aux_service =
     Eliom_output.Any.register_service
       ~path
       ~priority:10
-      ~get_params:(Eliom_parameters.suffix
-		     (Eliom_parameters.prod
-			(Eliom_parameters.suffix_const "files")
-			(Eliom_parameters.all_suffix "file")))
+      ~get_params:(Eliom_parameter.suffix
+		     (Eliom_parameter.prod
+			(Eliom_parameter.suffix_const "files")
+			(Eliom_parameter.all_suffix "file")))
       (fun arg -> process_aux (stable_version_name, arg)) in
 
   let api_service =
     Ocsimore_appl.register_service
       ~path
       ~priority:10
-      ~get_params:(Eliom_parameters.suffix
-		     (Eliom_parameters.prod
-			(Eliom_parameters.string "version")
-			(Eliom_parameters.prod
-			   (Eliom_parameters.suffix_const "api")
-			   (Eliom_parameters.all_suffix "file"))))
+      ~get_params:(Eliom_parameter.suffix
+		     (Eliom_parameter.prod
+			(Eliom_parameter.string "version")
+			(Eliom_parameter.prod
+			   (Eliom_parameter.suffix_const "api")
+			   (Eliom_parameter.all_suffix "file"))))
       process_api  in
 
   let default_api_service =
     Ocsimore_appl.register_service
       ~path
       ~priority:10
-      ~get_params:(Eliom_parameters.suffix
-			(Eliom_parameters.prod
-			   (Eliom_parameters.suffix_const "api")
-			   (Eliom_parameters.all_suffix "file")))
+      ~get_params:(Eliom_parameter.suffix
+			(Eliom_parameter.prod
+			   (Eliom_parameter.suffix_const "api")
+			   (Eliom_parameter.all_suffix "file")))
       (fun arg -> process_api (stable_version_name, arg))  in
 
   let _ =
@@ -525,13 +527,13 @@ let register_project_data (id, branches, last_stable, template_404, wb404, wb403
       ~options:`MovedPermanently
       ~path
       ~priority:10
-      ~get_params:(Eliom_parameters.suffix
-		     (Eliom_parameters.prod
-			(Eliom_parameters.string "version")
-			(Eliom_parameters.suffix_const "")))
+      ~get_params:(Eliom_parameter.suffix
+		     (Eliom_parameter.prod
+			(Eliom_parameter.string "version")
+			(Eliom_parameter.suffix_const "")))
       (fun (version,()) () ->
 	if List.exists (fun (name, _, _, versions, _, _) -> name = version || List.exists ((=) version) versions) branches then
-	  Lwt.return (Eliom_services.preapply manual_service (version, ((), [""])))
+	  Lwt.return (Eliom_service.preapply manual_service (version, ((), [""])))
 	else
 	  Lwt.fail Eliom_common.Eliom_404) in
 
@@ -558,22 +560,22 @@ let register_project_data (id, branches, last_stable, template_404, wb404, wb403
       ~manual_resolver:(fun branch -> manual_resolver project ~default branch)
       ~manual_service:
         (fun version file ->
-	  Eliom_services.preapply manual_service (version, ((),file)))
+	  Eliom_service.preapply manual_service (version, ((),file)))
       ~default_manual_service:
-        (fun file -> Eliom_services.preapply default_manual_service ((),file))
+        (fun file -> Eliom_service.preapply default_manual_service ((),file))
       ~manual_menu:(fun branch () -> manual_resolver project branch ["menu"])
       ~aux_resolver:(fun branch -> aux_resolver project branch)
       ~aux_service:
         (fun version file ->
-	  Eliom_services.preapply aux_service (version, ((),file)))
+	  Eliom_service.preapply aux_service (version, ((),file)))
       ~default_aux_service:
-        (fun file -> Eliom_services.preapply default_aux_service ((),file))
+        (fun file -> Eliom_service.preapply default_aux_service ((),file))
       ~api_resolver:(fun version -> api_resolver project version)
       ~api_service:
 	(fun version file ->
-	  Eliom_services.preapply api_service (version, ((),file)))
+	  Eliom_service.preapply api_service (version, ((),file)))
       ~default_api_service:
-        (fun file -> Eliom_services.preapply default_api_service ((),file))
+        (fun file -> Eliom_service.preapply default_api_service ((),file))
       ~api_menu:(fun version () ->
 	List.map
 	  (fun subproject -> api_resolver project version (subproject @ ["menu"]))
@@ -616,10 +618,10 @@ let tutorial_service =
     ~path:tutorial_path
     ~priority:10
     ~get_params:
-    (Eliom_parameters.suffix
-       (Eliom_parameters.prod
-          (Eliom_parameters.string "version")
-          (Eliom_parameters.all_suffix "file")))
+    (Eliom_parameter.suffix
+       (Eliom_parameter.prod
+          (Eliom_parameter.string "version")
+          (Eliom_parameter.all_suffix "file")))
     (fun (version, file) () ->
       set_current_version version;
       lwt () = Wiki_menu.set_menu_resolver (tutorial_resolver version) in
@@ -633,8 +635,8 @@ let tutorial_default_service =
     ~path:tutorial_path
     ~priority:10
     ~get_params:
-    (Eliom_parameters.suffix
-       (Eliom_parameters.all_suffix "file"))
+    (Eliom_parameter.suffix
+       (Eliom_parameter.all_suffix "file"))
     (fun file () ->
       set_current_version stable_version_name;
       lwt () = Wiki_menu.set_menu_resolver (tutorial_resolver tutorial_last) in
@@ -648,12 +650,12 @@ let tutorial_aux_service =
     ~path:(tutorial_path)
     ~priority:10
     ~get_params:
-    (Eliom_parameters.suffix
-       (Eliom_parameters.prod
-          (Eliom_parameters.string "version")
-	  (Eliom_parameters.prod
-	     (Eliom_parameters.suffix_const "files")
-             (Eliom_parameters.all_suffix "file"))))
+    (Eliom_parameter.suffix
+       (Eliom_parameter.prod
+          (Eliom_parameter.string "version")
+	  (Eliom_parameter.prod
+	     (Eliom_parameter.suffix_const "files")
+             (Eliom_parameter.all_suffix "file"))))
     (fun (version, ((), file)) () ->
       set_current_version version;
       lwt () = Wiki_menu.set_menu_resolver (tutorial_resolver version) in
@@ -668,7 +670,7 @@ let tutorial_aux_default_service =
     ~path:(tutorial_path @ ["files"])
     ~priority:10
     ~get_params:
-    (Eliom_parameters.suffix (Eliom_parameters.all_suffix "file"))
+    (Eliom_parameter.suffix (Eliom_parameter.all_suffix "file"))
     (fun file () ->
       set_current_version stable_version_name;
       lwt () = Wiki_menu.set_menu_resolver (tutorial_resolver tutorial_last) in
@@ -690,14 +692,14 @@ let () =
 	~template:tutorial_template
 	~manual_resolver:tutorial_resolver
 	~manual_service:(fun version file ->
-          Eliom_services.preapply tutorial_service (version, file))
+          Eliom_service.preapply tutorial_service (version, file))
 	~default_manual_service:(fun file ->
-          Eliom_services.preapply tutorial_default_service file)
+          Eliom_service.preapply tutorial_default_service file)
 	~manual_menu:(fun version () -> tutorial_resolver version ["menu"])
 	~aux_service:(fun version file ->
-	  Eliom_services.preapply tutorial_aux_service (version, ((), file)))
+	  Eliom_service.preapply tutorial_aux_service (version, ((), file)))
 	~default_aux_service:(fun file ->
-	  Eliom_services.preapply tutorial_aux_default_service file)
+	  Eliom_service.preapply tutorial_aux_default_service file)
 	~aux_resolver:tutorial_aux_resolver
         ~versions:[version]
 	tutorial_last (* Last stable version *)

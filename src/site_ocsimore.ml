@@ -16,7 +16,9 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *)
 
-open Eliom_pervasives
+open Eliom_content
+open Eliom_lib
+open Lwt_ops
 
 (** Extension wikifile *)
 
@@ -51,9 +53,9 @@ let do_wikifile bi args c =
     | Not_found -> Lwt.return []
     | exc ->
         Lwt.return
-	  [ HTML5.M.div
-	      ~a:[HTML5.M.a_class ["error"]]
-	      [ HTML5.M.pcdata (Printexc.to_string exc ) ] ])
+	  [ Html5.F.div
+	      ~a:[Html5.F.a_class ["error"]]
+	      [ Html5.F.pcdata (Printexc.to_string exc ) ] ])
 
 let _ =
   Wiki_syntax.register_interactive_simple_flow_extension
@@ -66,10 +68,10 @@ let do_script bi args c =
     (try
       let script = List.assoc "src" args in
       Lwt.return
-	[ HTML5.M.script
-	    ~a:[ HTML5.M.a_mime_type "text/javascript";
-		 HTML5.M.a_src (XML.uri_of_string script)]
-	    (HTML5.M.cdata_script "") ]
+	[ Html5.F.script
+	    ~a:[ Html5.F.a_mime_type "text/javascript";
+		 Html5.F.a_src (Xml.uri_of_string script)]
+	    (Html5.F.cdata_script "") ]
     with Not_found ->
       let content =
         match c with
@@ -77,9 +79,9 @@ let do_script bi args c =
         | None -> ""
       in
       Lwt.return
-	[ HTML5.M.script
-	    ~a:[HTML5.M.a_mime_type "text/javascript"]
-	    (HTML5.M.cdata_script content) ])
+	[ Html5.F.script
+	    ~a:[Html5.F.a_mime_type "text/javascript"]
+	    (Html5.F.cdata_script content) ])
 
 let _ =
   Wiki_syntax.register_simple_flow_extension
@@ -91,11 +93,11 @@ let _ =
 let atom_header =
   Page_site.Header.create_header
     (fun () ->
-      [ HTML5.M.link
+      [ Html5.F.link
 	  ~rel:[`Alternate]
-	  ~href:(XML.uri_of_string "http://ocsigen.org/news.atom")
-	  ~a:[ HTML5.M.a_title "Ocsigen news";
-	       HTML5.M.a_mime_type "application/atom+xml"; ]
+	  ~href:(Xml.uri_of_string "http://ocsigen.org/news.atom")
+	  ~a:[ Html5.F.a_title "Ocsigen news";
+	       Html5.F.a_mime_type "application/atom+xml"; ]
 	  () ])
 
 let add_atom_header () = Page_site.Header.require_header atom_header
@@ -118,26 +120,26 @@ let get_inline bi args =
 let do_wip bi args xml =
   `Flow5
     (lwt xml = match xml with
-      | Some c -> (c :> HTML5_types.flow5 HTML5.M.elt list Lwt.t)
+      | Some c -> (c :> Html5_types.flow5 Html5.F.elt list Lwt.t)
       | None -> Lwt.return [] in
      Lwt.return
-       [ HTML5.M.aside
-           ~a:[HTML5.M.a_class ["wip"]]
-           ( HTML5.M.header [HTML5.M.h5 [HTML5.M.pcdata "Work in progress"]]
+       [ Html5.F.aside
+           ~a:[Html5.F.a_class ["wip"]]
+           ( Html5.F.header [Html5.F.h5 [Html5.F.pcdata "Work in progress"]]
 	     :: xml ) ])
 
 let do_wip_inline bi args xml =
   `Phrasing_without_interactive
     (lwt xml = match xml with
-       | Some c -> (c :> HTML5_types.phrasing HTML5.M.elt list Lwt.t)
+       | Some c -> (c :> Html5_types.phrasing Html5.F.elt list Lwt.t)
        | None -> Lwt.return [] in
      let title =
        try List.assoc "title" args
        with Not_found -> "WIP: " in
      Lwt.return
-       [ HTML5.M.span
-           ~a:[HTML5.M.a_class ["wip"]]
-           ( HTML5.M.strong [HTML5.M.pcdata title] :: xml ) ])
+       [ Html5.F.span
+           ~a:[Html5.F.a_class ["wip"]]
+           ( Html5.F.strong [Html5.F.pcdata title] :: xml ) ])
 
 let _ =
   Wiki_syntax.register_wiki_flow_extension ~reduced:false ~name:"wip" { Wiki_syntax.fpp = do_wip };
@@ -149,12 +151,12 @@ let _ =
 let do_concepts bi args xml =
   `Flow5
     (lwt xml = match xml with
-      | Some c -> (c :> HTML5_types.flow5 HTML5.M.elt list Lwt.t)
+      | Some c -> (c :> Html5_types.flow5 Html5.F.elt list Lwt.t)
       | None -> Lwt.return [] in
      Lwt.return
-       [ HTML5.M.aside
-           ~a:[HTML5.M.a_class ["concepts"]]
-           ( HTML5.M.header [HTML5.M.h5 [HTML5.M.pcdata "Concepts"]]
+       [ Html5.F.aside
+           ~a:[Html5.F.a_class ["concepts"]]
+           ( Html5.F.header [Html5.F.h5 [Html5.F.pcdata "Concepts"]]
 	     :: xml ) ])
 
 let _ =
@@ -171,16 +173,16 @@ let get_title bi args =
 let do_concept bi args xml =
   `Flow5
     (lwt xml = match xml with
-      | Some c -> (c :> HTML5_types.flow5 HTML5.M.elt list Lwt.t)
+      | Some c -> (c :> Html5_types.flow5 Html5.F.elt list Lwt.t)
       | None -> Lwt.return [] in
      let title = get_title bi args in
      Lwt.return
-       [ HTML5.M.aside
-           ~a:[HTML5.M.a_class ["concept"]]
-           ( HTML5.M.header [HTML5.M.h5 [HTML5.M.span
-					   ~a:[HTML5.M.a_class ["concept_prefix"]]
-					   [HTML5.M.pcdata "Concept: "];
-					 HTML5.M.pcdata title]]
+       [ Html5.F.aside
+           ~a:[Html5.F.a_class ["concept"]]
+           ( Html5.F.header [Html5.F.h5 [Html5.F.span
+					   ~a:[Html5.F.a_class ["concept_prefix"]]
+					   [Html5.F.pcdata "Concept: "];
+					 Html5.F.pcdata title]]
 	     :: xml ) ])
 
 let _ =
@@ -193,11 +195,11 @@ let _ =
 let do_paragraph bi args xml =
   `Flow5
     (lwt xml = match xml with
-       | Some c -> (c :> _ HTML5.M.elt list Lwt.t)
+       | Some c -> (c :> _ Html5.F.elt list Lwt.t)
        | None -> Lwt.return [] in
      Lwt.return
-       [ HTML5.M.div
-           ~a:[HTML5.M.a_class ["paragraph"]]
+       [ Html5.F.div
+           ~a:[Html5.F.a_class ["paragraph"]]
           xml ])
 
 let _ =

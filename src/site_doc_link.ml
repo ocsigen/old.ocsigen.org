@@ -1,5 +1,7 @@
 
-open Eliom_pervasives
+open Eliom_content
+open Eliom_lib
+open Lwt_ops
 
 (** Extensions pour la gestion des liens dans la documentation web.
 
@@ -220,8 +222,8 @@ let do_manual_link bi args contents =
   let doc_class = "ocsforge_doclink_" ^ version.Site_doc.branch.Site_doc.br_project.Site_doc.path in
 
   let a =
-    Eliom_output.Html5.a
-      ~a:[HTML5.M.a_class [doc_class]]
+    Html5.D.a
+      ~a:[Html5.F.a_class [doc_class]]
       ~service:(version.Site_doc.manual_service chapter)
       ?fragment
       contents
@@ -258,7 +260,7 @@ let do_aux_link bi args contents =
 
   (* Parse contents *)
   lwt contents = match contents with
-   | None -> Lwt.return [HTML5.M.pcdata (Filename.basename src)]
+   | None -> Lwt.return [Html5.F.pcdata (Filename.basename src)]
    | Some contents ->
       Wiki_syntax.xml_of_wiki
 	(Wiki_syntax.cast_niwp Wiki_syntax.phrasing_wikicreole_parser)
@@ -268,8 +270,8 @@ let do_aux_link bi args contents =
   (* Build URL *)
   let doc_class = "ocsforge_doclink_" ^ version.Site_doc.branch.Site_doc.br_project.Site_doc.path in
   let a =
-    Eliom_output.Html5.a
-      ~a:[HTML5.M.a_class [doc_class]]
+    Html5.D.a
+      ~a:[Html5.F.a_class [doc_class]]
       ~service:(version.Site_doc.aux_service (Neturl.split_path src))
       ?fragment contents	() in
   Lwt.return [a]
@@ -294,9 +296,9 @@ let do_aux_img bi args contents =
 
   (* Build URL *)
   let src =
-    Eliom_output.Html5.make_uri
+    Html5.D.make_uri
       ~service:(version.Site_doc.aux_service (Neturl.split_path src)) () in
-  Lwt.return [ HTML5.M.img ~src ~alt () ]
+  Lwt.return [ Html5.F.img ~src ~alt () ]
 
 let () = register "a_img" do_aux_img
 
@@ -311,12 +313,12 @@ let do_aux_iframe bi args contents =
 
   (* Build URL *)
   let src =
-    Eliom_output.Html5.make_uri
+    Html5.D.make_uri
       ~service:(version.Site_doc.aux_service (Neturl.split_path src)) () in
-  Lwt.return [ HTML5.M.iframe
-		 ~a:( HTML5.M.a_src src :: HTML5.M.a_width width
-                      :: HTML5.M.a_height height :: attribs)
-		 [HTML5.M.pcdata ""] ]
+  Lwt.return [ Html5.F.iframe
+		 ~a:( Html5.F.a_src src :: Html5.F.a_width width
+                      :: Html5.F.a_height height :: attribs)
+		 [Html5.F.pcdata ""] ]
 
 let () = register "a_iframe" do_aux_iframe
 
@@ -445,11 +447,11 @@ let do_api_link prefix bi args contents =
   (* Build URL *)
   let doc_class = "ocsforge_doclink_" ^ version.Site_doc.branch.Site_doc.br_project.Site_doc.path in
   let a =
-    Eliom_output.Html5.a
-      ~a:[HTML5.M.a_class [doc_class]; HTML5.M.a_style "white-space: pre-line;"]
+    Html5.D.a
+      ~a:[Html5.F.a_class [doc_class]; Html5.F.a_style "white-space: pre-line;"]
       ~service:(version.Site_doc.api_service (sub @ [path_of_id ?prefix id]))
       ?fragment:(fragment_of_id id)
-      [HTML5.M.pcdata body] () in
+      [Html5.F.pcdata body] () in
   Lwt.return [a]
 
 let () = register "a_api" (do_api_link None)

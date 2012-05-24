@@ -1,6 +1,6 @@
 
-let (>>=) = Lwt.bind
-let (>|=) m f = Lwt.map f m
+open Eliom_content
+open Eliom_lib.Lwt_ops
 
 let register name f =
   Wiki_syntax.register_interactive_simple_flow_extension
@@ -90,7 +90,7 @@ let _ = register "manualtree" do_manualtree
 let get_relative_path_in_wiki bi project service =
   let prefix = project.Site_doc.path in
   let url =
-    Eliom_output.Html5.make_string_uri ~absolute_path:true ~service () in
+    Html5.D.make_string_uri ~absolute_path:true ~service () in
 (*  assert(String.length prefix < String.length url);  *)
   assert(String.sub url 1 (String.length prefix) = prefix);
   String.sub url
@@ -175,8 +175,8 @@ let do_docmenu bi args contents =
 let register name f =
   let error (msg:string) =
     Lwt.return
-      [ HTML5.M.h1
-	  [ HTML5.M.span ~a:[HTML5.M.a_class ["doclink_error"]] [HTML5.M.pcdata msg]] ] in
+      [ Html5.F.h1
+	  [ Html5.F.span ~a:[Html5.F.a_class ["doclink_error"]] [Html5.F.pcdata msg]] ] in
 
   let wrap f = fun bi args contents ->
     `Flow5
