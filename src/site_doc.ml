@@ -210,7 +210,7 @@ let guess_version () =
 type wiki_service =
     (unit, unit, Eliom_service.get_service_kind, [ `WithoutSuffix ],
      unit, unit, Eliom_service.registrable,
-     Eliom_output.appl_service) Eliom_service.service
+     Eliom_registration.appl_service) Eliom_service.service
 
 type project = {
     wiki: Wiki_types.wiki;
@@ -478,7 +478,7 @@ let register_project_data (id, branches, last_stable, template_404, wb404, wb403
       (fun arg -> process_manual (stable_version_name, arg)) in
 
   let aux_service =
-    Eliom_output.Any.register_service
+    Eliom_registration.Any.register_service
       ~path
       ~priority:10
       ~get_params:(Eliom_parameter.suffix
@@ -490,7 +490,7 @@ let register_project_data (id, branches, last_stable, template_404, wb404, wb403
       process_aux in
 
   let default_aux_service =
-    Eliom_output.Any.register_service
+    Eliom_registration.Any.register_service
       ~path
       ~priority:10
       ~get_params:(Eliom_parameter.suffix
@@ -523,7 +523,7 @@ let register_project_data (id, branches, last_stable, template_404, wb404, wb403
 
   let _ =
     (* redirect <project>/<version>/ to <project>/<version>/manual/ *)
-    Eliom_output.Redirection.register_service
+    Eliom_registration.Redirection.register_service
       ~options:`MovedPermanently
       ~path
       ~priority:10
@@ -646,7 +646,7 @@ let tutorial_default_service =
 	(tutorial_resolver tutorial_last) file)
 
 let tutorial_aux_service =
-  Eliom_output.Any.register_service
+  Eliom_registration.Any.register_service
     ~path:(tutorial_path)
     ~priority:10
     ~get_params:
@@ -666,7 +666,7 @@ let tutorial_aux_service =
 	(tutorial_aux_resolver version) file)
 
 let tutorial_aux_default_service =
-  Eliom_output.Any.register_service
+  Eliom_registration.Any.register_service
     ~path:(tutorial_path @ ["files"])
     ~priority:10
     ~get_params:
