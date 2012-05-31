@@ -217,20 +217,29 @@ let do_client_server_switch bi args xml =
     let path =
       let rec aux sofar = function
         | [] -> None
-        | "api" :: "client" :: rest -> Some (List.rev sofar @ "api" :: "server" :: rest, "server")
-        | "api" :: "server" :: rest -> Some (List.rev sofar @ "api" :: "client" :: rest, "client")
+        | "api" :: "client" :: rest -> Some (List.rev sofar @ "api" :: "server" :: rest, "client", "server")
+        | "api" :: "server" :: rest -> Some (List.rev sofar @ "api" :: "client" :: rest, "server", "client")
         | head :: tail -> aux (head :: sofar) tail
       in aux [] path
     in
     match path with
-      | Some (path, target) ->
+      | Some (path, src, trg) ->
           let service =
             let s =
               let open Wiki_self_services in
               Servpages.find Wiki_self_services.servpages bi.Wiki_widgets_interface.bi_wiki
             in
             Eliom_service.preapply s path in
-          Html5.F.([div [a ~a:[a_class [target; "client-server-switch"]] ~service [pcdata ("On "^target)] ()]])
+          Html5.F.([
+            div ~a:[a_class ["client-server-switch-wrapper"]] [
+              div ~a:[a_class ["client-server-switch"]] [
+                span ~a:[a_class [src; "source"]] [pcdata ("This is "^src^" API")];
+                pcdata " (go to ";
+                a ~a:[a_class [trg; "target"]] ~service [pcdata trg] ();
+                pcdata ")";
+              ]
+            ]
+          ])
       | None -> []
   in
   `Flow5 (Lwt.return html5)
