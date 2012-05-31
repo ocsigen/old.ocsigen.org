@@ -37,25 +37,25 @@ let do_wikifile bi args c =
       let repository = get_repository bi args in
       let filename = List.assoc "file" args in
       let file = Ocsigen_local_files.resolve
-	  ~no_check_for:repository
-	  ~request:(Eliom_request_info.get_request ())
-	  ~filename:(repository ^ "/" ^ filename) in
+          ~no_check_for:repository
+          ~request:(Eliom_request_info.get_request ())
+          ~filename:(repository ^ "/" ^ filename) in
       match file with
       | Ocsigen_local_files.RFile file ->
-	Lwt_io.with_file ~mode:Lwt_io.input file
-	  (fun ch ->
-	    lwt data = Lwt_io.read ch in
-	    lwt xml = Wiki_syntax.xml_of_wiki
-	      (Wiki_syntax.cast_wp Wiki_syntax.wikicreole_parser_without_header_footer) bi data in
-	    Lwt.return xml)
+        Lwt_io.with_file ~mode:Lwt_io.input file
+          (fun ch ->
+            lwt data = Lwt_io.read ch in
+            lwt xml = Wiki_syntax.xml_of_wiki
+              (Wiki_syntax.cast_wp Wiki_syntax.wikicreole_parser_without_header_footer) bi data in
+            Lwt.return xml)
       | Ocsigen_local_files.RDir file -> Lwt.return []
     with
     | Not_found -> Lwt.return []
     | exc ->
         Lwt.return
-	  [ Html5.F.div
-	      ~a:[Html5.F.a_class ["error"]]
-	      [ Html5.F.pcdata (Printexc.to_string exc ) ] ])
+          [ Html5.F.div
+              ~a:[Html5.F.a_class ["error"]]
+              [ Html5.F.pcdata (Printexc.to_string exc ) ] ])
 
 let _ =
   Wiki_syntax.register_interactive_simple_flow_extension
@@ -68,10 +68,10 @@ let do_script bi args c =
     (try
       let script = List.assoc "src" args in
       Lwt.return
-	[ Html5.F.script
-	    ~a:[ Html5.F.a_mime_type "text/javascript";
-		 Html5.F.a_src (Xml.uri_of_string script)]
-	    (Html5.F.cdata_script "") ]
+        [ Html5.F.script
+            ~a:[ Html5.F.a_mime_type "text/javascript";
+                 Html5.F.a_src (Xml.uri_of_string script)]
+            (Html5.F.cdata_script "") ]
     with Not_found ->
       let content =
         match c with
@@ -79,9 +79,9 @@ let do_script bi args c =
         | None -> ""
       in
       Lwt.return
-	[ Html5.F.script
-	    ~a:[Html5.F.a_mime_type "text/javascript"]
-	    (Html5.F.cdata_script content) ])
+        [ Html5.F.script
+            ~a:[Html5.F.a_mime_type "text/javascript"]
+            (Html5.F.cdata_script content) ])
 
 let _ =
   Wiki_syntax.register_simple_flow_extension
@@ -94,11 +94,11 @@ let atom_header =
   Page_site.Header.create_header
     (fun () ->
       [ Html5.F.link
-	  ~rel:[`Alternate]
-	  ~href:(Xml.uri_of_string "http://ocsigen.org/news.atom")
-	  ~a:[ Html5.F.a_title "Ocsigen news";
-	       Html5.F.a_mime_type "application/atom+xml"; ]
-	  () ])
+          ~rel:[`Alternate]
+          ~href:(Xml.uri_of_string "http://ocsigen.org/news.atom")
+          ~a:[ Html5.F.a_title "Ocsigen news";
+               Html5.F.a_mime_type "application/atom+xml"; ]
+          () ])
 
 let add_atom_header () = Page_site.Header.require_header atom_header
 
@@ -126,7 +126,7 @@ let do_wip bi args xml =
        [ Html5.F.aside
            ~a:[Html5.F.a_class ["wip"]]
            ( Html5.F.header [Html5.F.h5 [Html5.F.pcdata "Work in progress"]]
-	     :: xml ) ])
+             :: xml ) ])
 
 let do_wip_inline bi args xml =
   `Phrasing_without_interactive
@@ -157,7 +157,7 @@ let do_concepts bi args xml =
        [ Html5.F.aside
            ~a:[Html5.F.a_class ["concepts"]]
            ( Html5.F.header [Html5.F.h5 [Html5.F.pcdata "Concepts"]]
-	     :: xml ) ])
+             :: xml ) ])
 
 let _ =
   Wiki_syntax.register_wiki_flow_extension
@@ -180,10 +180,10 @@ let do_concept bi args xml =
        [ Html5.F.aside
            ~a:[Html5.F.a_class ["concept"]]
            ( Html5.F.header [Html5.F.h5 [Html5.F.span
-					   ~a:[Html5.F.a_class ["concept_prefix"]]
-					   [Html5.F.pcdata "Concept: "];
-					 Html5.F.pcdata title]]
-	     :: xml ) ])
+                                           ~a:[Html5.F.a_class ["concept_prefix"]]
+                                           [Html5.F.pcdata "Concept: "];
+                                         Html5.F.pcdata title]]
+             :: xml ) ])
 
 let _ =
   Wiki_syntax.register_wiki_flow_extension
@@ -207,3 +207,35 @@ let _ =
     ~reduced:false
     ~name:"paragraph"
     { Wiki_syntax.fpp = do_paragraph }
+
+(* Client/Server-Switch *)
+
+
+let do_client_server_switch bi args xml =
+  let html5 =
+    let wiki, path = Wiki_self_services.get_wiki_page_for_path (Eliom_request_info.get_current_sub_path ()) in
+    let path' =
+      match path with
+        | "api" :: "client" :: rest -> Some ("api" :: "server" :: rest, "server")
+        | "api" :: "server" :: rest -> Some ("api" :: "client" :: rest, "client")
+        | _ -> None
+    in
+    match path' with
+      | Some (path', target) ->
+          let service =
+            let s =
+              let open Wiki_self_services in
+              Servpages.find Wiki_self_services.servpages bi.Wiki_widgets_interface.bi_wiki
+            in
+            Eliom_service.preapply s path' in
+          Html5.F.([div [a ~a:[a_class [target; "client-server-switch"]] ~service [pcdata ("On "^target)] ()]])
+      | None -> []
+  in
+  `Flow5 (Lwt.return html5)
+
+let () =
+  Wiki_syntax.register_wiki_flow_extension
+    ~reduced:false
+    ~name:"client-server-switch"
+    { Wiki_syntax.fpp = do_client_server_switch }
+

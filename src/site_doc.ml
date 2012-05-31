@@ -169,23 +169,23 @@ let wrap_phrasing name f = fun bi args contents ->
   `Phrasing_without_interactive
     (lwt content =
        try_lwt
-	 f bi args contents
+         f bi args contents
        with
       | Error msg -> error (Format.sprintf "Error %s: %s" name msg)
       | exc ->
          error (Format.sprintf "Error %s: exception %s" name
-		  (Printexc.to_string exc) ) in
+                  (Printexc.to_string exc) ) in
      Lwt.return [Html5.F.span content])
 
 let wrap_flow5 name f = fun bi args contents ->
   `Flow5
     (try_lwt
-	f bi args contents
+        f bi args contents
      with
        | Error msg -> error (Format.sprintf "Error %s: %s" name msg)
        | exc ->
-	 error (Format.sprintf "Error %s: exception %s" name
-		  (Printexc.to_string exc) ) )
+         error (Format.sprintf "Error %s: exception %s" name
+                  (Printexc.to_string exc) ) )
 
 (** Contexte des services et des extensions. *)
 
@@ -255,8 +255,8 @@ let version_404 project =
   let rec v = {
     version = "404";
     branch = { br_template = project.template_404; br_title = Some "404";
-	       br_order=0; br_name = "404"; br_version = v;
-	       br_versions = []; br_project = project; br_subprojects = []; };
+               br_order=0; br_name = "404"; br_version = v;
+               br_versions = []; br_project = project; br_subprojects = []; };
     manual_resolver = (fun _ -> raise Wiki_dir.Undefined);
     manual_service = (fun _ -> raise Wiki_dir.Undefined);
     manual_menu = (fun _ -> raise Wiki_dir.Undefined);
@@ -383,16 +383,16 @@ let register_branch ~wiki ~template
     project.versions <- insert_version v project.versions;
     if v.version = last_stable_version then begin
       let v = {
-	version = stable_version_name;
-	branch = branch;
-	manual_resolver = manual_resolver name;
-	manual_service = (default_manual_service :> string list -> wiki_service);
-	manual_menu = manual_menu name;
-	aux_resolver = aux_resolver name;
-	aux_service = (default_aux_service :> string list -> wiki_service);
-	api_resolver = api_resolver last_stable_version;
-	api_service = (default_api_service :> string list -> wiki_service);
-	api_menu = api_menu last_stable_version;
+        version = stable_version_name;
+        branch = branch;
+        manual_resolver = manual_resolver name;
+        manual_service = (default_manual_service :> string list -> wiki_service);
+        manual_menu = manual_menu name;
+        aux_resolver = aux_resolver name;
+        aux_service = (default_aux_service :> string list -> wiki_service);
+        api_resolver = api_resolver last_stable_version;
+        api_service = (default_api_service :> string list -> wiki_service);
+        api_menu = api_menu last_stable_version;
       } in
       branch.br_versions <- insert_version v branch.br_versions;
       project.versions <- insert_version v project.versions;
@@ -457,11 +457,11 @@ let register_project_data (id, branches, last_stable, template_404, wb404, wb403
       ~path
       ~priority:10
       ~get_params:(Eliom_parameter.suffix
-		     (Eliom_parameter.prod
-			(Eliom_parameter.string "version")
-			(Eliom_parameter.prod
-			   (Eliom_parameter.suffix_const "manual")
-			   (Eliom_parameter.all_suffix "file"))))
+                     (Eliom_parameter.prod
+                        (Eliom_parameter.string "version")
+                        (Eliom_parameter.prod
+                           (Eliom_parameter.suffix_const "manual")
+                           (Eliom_parameter.all_suffix "file"))))
       process_manual in
 
   let default_manual_service =
@@ -469,9 +469,9 @@ let register_project_data (id, branches, last_stable, template_404, wb404, wb403
       ~path
       ~priority:10
       ~get_params:(Eliom_parameter.suffix
-		     (Eliom_parameter.prod
-			(Eliom_parameter.suffix_const "manual")
-			(Eliom_parameter.all_suffix "file")))
+                     (Eliom_parameter.prod
+                        (Eliom_parameter.suffix_const "manual")
+                        (Eliom_parameter.all_suffix "file")))
       (fun arg -> process_manual (stable_version_name, arg)) in
 
   let aux_service =
@@ -479,11 +479,11 @@ let register_project_data (id, branches, last_stable, template_404, wb404, wb403
       ~path
       ~priority:10
       ~get_params:(Eliom_parameter.suffix
-		     (Eliom_parameter.prod
-			(Eliom_parameter.string "version")
-			(Eliom_parameter.prod
-			   (Eliom_parameter.suffix_const "files")
-			   (Eliom_parameter.all_suffix "file"))))
+                     (Eliom_parameter.prod
+                        (Eliom_parameter.string "version")
+                        (Eliom_parameter.prod
+                           (Eliom_parameter.suffix_const "files")
+                           (Eliom_parameter.all_suffix "file"))))
       process_aux in
 
   let default_aux_service =
@@ -491,9 +491,9 @@ let register_project_data (id, branches, last_stable, template_404, wb404, wb403
       ~path
       ~priority:10
       ~get_params:(Eliom_parameter.suffix
-		     (Eliom_parameter.prod
-			(Eliom_parameter.suffix_const "files")
-			(Eliom_parameter.all_suffix "file")))
+                     (Eliom_parameter.prod
+                        (Eliom_parameter.suffix_const "files")
+                        (Eliom_parameter.all_suffix "file")))
       (fun arg -> process_aux (stable_version_name, arg)) in
 
   let api_service =
@@ -501,11 +501,11 @@ let register_project_data (id, branches, last_stable, template_404, wb404, wb403
       ~path
       ~priority:10
       ~get_params:(Eliom_parameter.suffix
-		     (Eliom_parameter.prod
-			(Eliom_parameter.string "version")
-			(Eliom_parameter.prod
-			   (Eliom_parameter.suffix_const "api")
-			   (Eliom_parameter.all_suffix "file"))))
+                     (Eliom_parameter.prod
+                        (Eliom_parameter.string "version")
+                        (Eliom_parameter.prod
+                           (Eliom_parameter.suffix_const "api")
+                           (Eliom_parameter.all_suffix "file"))))
       process_api  in
 
   let default_api_service =
@@ -513,9 +513,9 @@ let register_project_data (id, branches, last_stable, template_404, wb404, wb403
       ~path
       ~priority:10
       ~get_params:(Eliom_parameter.suffix
-			(Eliom_parameter.prod
-			   (Eliom_parameter.suffix_const "api")
-			   (Eliom_parameter.all_suffix "file")))
+                        (Eliom_parameter.prod
+                           (Eliom_parameter.suffix_const "api")
+                           (Eliom_parameter.all_suffix "file")))
       (fun arg -> process_api (stable_version_name, arg))  in
 
   let _ =
@@ -525,14 +525,14 @@ let register_project_data (id, branches, last_stable, template_404, wb404, wb403
       ~path
       ~priority:10
       ~get_params:(Eliom_parameter.suffix
-		     (Eliom_parameter.prod
-			(Eliom_parameter.string "version")
-			(Eliom_parameter.suffix_const "")))
+                     (Eliom_parameter.prod
+                        (Eliom_parameter.string "version")
+                        (Eliom_parameter.suffix_const "")))
       (fun (version,()) () ->
-	if List.exists (fun (name, _, _, versions, _, _) -> name = version || List.exists ((=) version) versions) branches then
-	  Lwt.return (Eliom_service.preapply manual_service (version, ((), [""])))
-	else
-	  Lwt.fail Eliom_common.Eliom_404) in
+        if List.exists (fun (name, _, _, versions, _, _) -> name = version || List.exists ((=) version) versions) branches then
+          Lwt.return (Eliom_service.preapply manual_service (version, ((), [""])))
+        else
+          Lwt.fail Eliom_common.Eliom_404) in
 
   let manual_resolver project ?default branch =
     let manual_dir =
@@ -557,26 +557,26 @@ let register_project_data (id, branches, last_stable, template_404, wb404, wb403
       ~manual_resolver:(fun branch -> manual_resolver project ~default branch)
       ~manual_service:
         (fun version file ->
-	  Eliom_service.preapply manual_service (version, ((),file)))
+          Eliom_service.preapply manual_service (version, ((),file)))
       ~default_manual_service:
         (fun file -> Eliom_service.preapply default_manual_service ((),file))
       ~manual_menu:(fun branch () -> manual_resolver project branch ["menu"])
       ~aux_resolver:(fun branch -> aux_resolver project branch)
       ~aux_service:
         (fun version file ->
-	  Eliom_service.preapply aux_service (version, ((),file)))
+          Eliom_service.preapply aux_service (version, ((),file)))
       ~default_aux_service:
         (fun file -> Eliom_service.preapply default_aux_service ((),file))
       ~api_resolver:(fun version -> api_resolver project version)
       ~api_service:
-	(fun version file ->
-	  Eliom_service.preapply api_service (version, ((),file)))
+        (fun version file ->
+          Eliom_service.preapply api_service (version, ((),file)))
       ~default_api_service:
         (fun file -> Eliom_service.preapply default_api_service ((),file))
       ~api_menu:(fun version () ->
-	List.map
-	  (fun subproject -> api_resolver project version (subproject @ ["menu"]))
-	  subprojects)
+        List.map
+          (fun subproject -> api_resolver project version (subproject @ ["menu"]))
+          subprojects)
       ~versions
       ~subprojects
       ?title
@@ -623,9 +623,9 @@ let tutorial_service =
       set_current_version version;
       lwt () = Wiki_menu.set_menu_resolver (tutorial_resolver version) in
       Wiki_dir.process_wikifile
-	~wiki:tutorial_wiki ~template:tutorial_template
-	~wb404:tutorial_wb404 ~wb403:tutorial_wb403
-	(tutorial_resolver version) file)
+        ~wiki:tutorial_wiki ~template:tutorial_template
+        ~wb404:tutorial_wb404 ~wb403:tutorial_wb403
+        (tutorial_resolver version) file)
 
 let tutorial_default_service =
   Ocsimore_appl.register_service
@@ -638,9 +638,9 @@ let tutorial_default_service =
       set_current_version stable_version_name;
       lwt () = Wiki_menu.set_menu_resolver (tutorial_resolver tutorial_last) in
       Wiki_dir.process_wikifile
-	~wiki:tutorial_wiki ~template:tutorial_template
-	~wb404:tutorial_wb404 ~wb403:tutorial_wb403
-	(tutorial_resolver tutorial_last) file)
+        ~wiki:tutorial_wiki ~template:tutorial_template
+        ~wb404:tutorial_wb404 ~wb403:tutorial_wb403
+        (tutorial_resolver tutorial_last) file)
 
 let tutorial_aux_service =
   Eliom_registration.Any.register_service
@@ -650,17 +650,17 @@ let tutorial_aux_service =
     (Eliom_parameter.suffix
        (Eliom_parameter.prod
           (Eliom_parameter.string "version")
-	  (Eliom_parameter.prod
-	     (Eliom_parameter.suffix_const "files")
+          (Eliom_parameter.prod
+             (Eliom_parameter.suffix_const "files")
              (Eliom_parameter.all_suffix "file"))))
     (fun (version, ((), file)) () ->
       set_current_version version;
       lwt () = Wiki_menu.set_menu_resolver (tutorial_resolver version) in
       Wiki_dir.process_auxfile
-	~options:2678400
-	~wiki:tutorial_wiki ~template:tutorial_template
-	~wb404:tutorial_wb404 ~wb403:tutorial_wb403
-	(tutorial_aux_resolver version) file)
+        ~options:2678400
+        ~wiki:tutorial_wiki ~template:tutorial_template
+        ~wb404:tutorial_wb404 ~wb403:tutorial_wb403
+        (tutorial_aux_resolver version) file)
 
 let tutorial_aux_default_service =
   Eliom_registration.Any.register_service
@@ -672,10 +672,10 @@ let tutorial_aux_default_service =
       set_current_version stable_version_name;
       lwt () = Wiki_menu.set_menu_resolver (tutorial_resolver tutorial_last) in
       Wiki_dir.process_auxfile
-	~options:2678400
-	~wiki:tutorial_wiki ~template:tutorial_template
-	~wb404:tutorial_wb404 ~wb403:tutorial_wb403
-	(tutorial_aux_resolver tutorial_last) file)
+        ~options:2678400
+        ~wiki:tutorial_wiki ~template:tutorial_template
+        ~wb404:tutorial_wb404 ~wb403:tutorial_wb403
+        (tutorial_aux_resolver tutorial_last) file)
 
 let () =
   register_project
@@ -686,19 +686,19 @@ let () =
     (fun version ->
       register_branch
         ~wiki:tutorial_wiki
-	~template:tutorial_template
-	~manual_resolver:tutorial_resolver
-	~manual_service:(fun version file ->
+        ~template:tutorial_template
+        ~manual_resolver:tutorial_resolver
+        ~manual_service:(fun version file ->
           Eliom_service.preapply tutorial_service (version, file))
-	~default_manual_service:(fun file ->
+        ~default_manual_service:(fun file ->
           Eliom_service.preapply tutorial_default_service file)
-	~manual_menu:(fun version () -> tutorial_resolver version ["menu"])
-	~aux_service:(fun version file ->
-	  Eliom_service.preapply tutorial_aux_service (version, ((), file)))
-	~default_aux_service:(fun file ->
-	  Eliom_service.preapply tutorial_aux_default_service file)
-	~aux_resolver:tutorial_aux_resolver
+        ~manual_menu:(fun version () -> tutorial_resolver version ["menu"])
+        ~aux_service:(fun version file ->
+          Eliom_service.preapply tutorial_aux_service (version, ((), file)))
+        ~default_aux_service:(fun file ->
+          Eliom_service.preapply tutorial_aux_default_service file)
+        ~aux_resolver:tutorial_aux_resolver
         ~versions:[version]
-	tutorial_last (* Last stable version *)
-	version) (* default branch name *)
+        tutorial_last (* Last stable version *)
+        version) (* default branch name *)
     tutorial_version
