@@ -214,20 +214,22 @@ let _ =
 let do_client_server_switch bi args xml =
   let html5 =
     let wiki, path = Wiki_self_services.get_wiki_page_for_path (Eliom_request_info.get_current_sub_path ()) in
-    let path' =
-      match path with
-        | "api" :: "client" :: rest -> Some ("api" :: "server" :: rest, "server")
-        | "api" :: "server" :: rest -> Some ("api" :: "client" :: rest, "client")
-        | _ -> None
+    let path =
+      let rec aux sofar = function
+        | [] -> None
+        | "api" :: "client" :: rest -> Some (List.rev sofar @ "api" :: "server" :: rest, "server")
+        | "api" :: "server" :: rest -> Some (List.rev sofar @ "api" :: "client" :: rest, "client")
+        | head :: tail -> aux (head :: sofar) tail
+      in aux [] path
     in
-    match path' with
-      | Some (path', target) ->
+    match path with
+      | Some (path, target) ->
           let service =
             let s =
               let open Wiki_self_services in
               Servpages.find Wiki_self_services.servpages bi.Wiki_widgets_interface.bi_wiki
             in
-            Eliom_service.preapply s path' in
+            Eliom_service.preapply s path in
           Html5.F.([div [a ~a:[a_class [target; "client-server-switch"]] ~service [pcdata ("On "^target)] ()]])
       | None -> []
   in
