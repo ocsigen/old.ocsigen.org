@@ -152,8 +152,9 @@ let tutorial_id = 36
 let tutorial_template = "tutorialTemplate"
 let tutorial_default = "intro"
 
-let tutorial_version = ["dev"]
 let tutorial_last = "dev"
+let tutorial_stable = "stable"
+let tutorial_version = [tutorial_last; tutorial_stable]
 
 let tutorial_wb404 = Wiki_types.wikibox_of_sql 295l
 let tutorial_wb403 = Wiki_types.wikibox_of_sql 295l
@@ -614,6 +615,7 @@ let tutorial_service =
           (Eliom_parameter.string "version")
           (Eliom_parameter.all_suffix "file")))
     (fun (version, file) () ->
+      debug "tutorial_service %S" (String.concat "/" file);
       Eliom_reference.Volatile.set current_version (Some version);
       lwt () = Wiki_menu.set_menu_resolver (tutorial_resolver version) in
       Wiki_dir.process_wikifile
@@ -629,12 +631,13 @@ let tutorial_default_service =
     (Eliom_parameter.suffix
        (Eliom_parameter.all_suffix "file"))
     (fun file () ->
+      debug "tutorial_default_service %S" (String.concat "/" file);
       Eliom_reference.Volatile.set current_version (Some stable_version_name);
       lwt () = Wiki_menu.set_menu_resolver (tutorial_resolver tutorial_stable) in
       Wiki_dir.process_wikifile
         ~wiki:tutorial_wiki ~template:tutorial_template
         ~wb404:tutorial_wb404 ~wb403:tutorial_wb403
-        (tutorial_resolver tutorial_last) file)
+        (tutorial_resolver tutorial_stable) file)
 
 let tutorial_aux_service =
   Eliom_registration.Any.register_service
@@ -648,6 +651,7 @@ let tutorial_aux_service =
              (Eliom_parameter.suffix_const "files")
              (Eliom_parameter.all_suffix "file"))))
     (fun (version, ((), file)) () ->
+      debug "tutorial_aux_service %S" (String.concat "/" file);
       Eliom_reference.Volatile.set current_version (Some version);
       lwt () = Wiki_menu.set_menu_resolver (tutorial_resolver version) in
       Wiki_dir.process_auxfile
@@ -663,13 +667,14 @@ let tutorial_aux_default_service =
     ~get_params:
     (Eliom_parameter.suffix (Eliom_parameter.all_suffix "file"))
     (fun file () ->
+      debug "tutorial_aux_default_service %S" (String.concat "/" file);
       Eliom_reference.Volatile.set current_version (Some stable_version_name);
       lwt () = Wiki_menu.set_menu_resolver (tutorial_resolver tutorial_stable) in
       Wiki_dir.process_auxfile
         ~options:2678400
         ~wiki:tutorial_wiki ~template:tutorial_template
         ~wb404:tutorial_wb404 ~wb403:tutorial_wb403
-        (tutorial_aux_resolver tutorial_last) file)
+        (tutorial_aux_resolver tutorial_stable) file)
 
 let () =
   register_project
