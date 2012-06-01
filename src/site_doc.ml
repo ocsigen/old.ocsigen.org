@@ -189,20 +189,14 @@ let wrap_flow5 name f = fun bi args contents ->
 
 (** Contexte des services et des extensions. *)
 
-(* GRGR FIXME use eref ~scope:Request *)
-let current_version : string Polytables.key = Polytables.make_key ()
-let set_current_version version =
-  let table = Eliom_request_info.get_request_cache () in
-  Polytables.set ~table ~key:current_version ~value:version
+let current_version = Eliom_reference.Volatile.eref ~scope:Eliom_common.request None
 
 let stable_version_name = "" (* internal version number for the last stable version *)
 
 let guess_version () =
-  try
-    let table = Eliom_request_info.get_request_cache () in
-    Polytables.get ~table ~key:current_version
-  with
-  | Not_found -> stable_version_name
+  match Eliom_reference.Volatile.get current_version with
+    | Some v -> v
+    | None -> stable_version_name
 
 type wiki_service =
     (unit, unit, Eliom_service.get_service_kind, [ `WithoutSuffix ],
@@ -425,7 +419,7 @@ let register_project_data (id, branches, last_stable, template_404, wb404, wb403
   let wb403 = Wiki_types.wikibox_of_sql wb403 in
 
   let process_manual (version, ((), file)) () =
-    set_current_version version;
+    Eliom_reference.Volatile.set current_version (Some version);
     let version = find_version (wiki, Some version) in
     lwt () = Wiki_menu.set_menu_resolver version.manual_resolver in
     Wiki_dir.process_wikifile
@@ -434,7 +428,7 @@ let register_project_data (id, branches, last_stable, template_404, wb404, wb403
       version.manual_resolver file in
 
   let process_aux (version, ((), file)) () =
-    set_current_version version;
+    Eliom_reference.Volatile.set current_version (Some version);
     let version = find_version (wiki, Some version) in
     lwt () = Wiki_menu.set_menu_resolver version.manual_resolver in
     Wiki_dir.process_auxfile
@@ -444,7 +438,7 @@ let register_project_data (id, branches, last_stable, template_404, wb404, wb403
       version.aux_resolver file in
 
   let process_api (version, ((), file)) () =
-    set_current_version version;
+    Eliom_reference.Volatile.set current_version (Some version);
     let version = find_version (wiki, Some version) in
     lwt () = Wiki_menu.set_menu_resolver version.manual_resolver in
     Wiki_dir.process_wikifile
@@ -620,7 +614,7 @@ let tutorial_service =
           (Eliom_parameter.string "version")
           (Eliom_parameter.all_suffix "file")))
     (fun (version, file) () ->
-      set_current_version version;
+      Eliom_reference.Volatile.set current_version (Some version);
       lwt () = Wiki_menu.set_menu_resolver (tutorial_resolver version) in
       Wiki_dir.process_wikifile
         ~wiki:tutorial_wiki ~template:tutorial_template
@@ -635,8 +629,8 @@ let tutorial_default_service =
     (Eliom_parameter.suffix
        (Eliom_parameter.all_suffix "file"))
     (fun file () ->
-      set_current_version stable_version_name;
-      lwt () = Wiki_menu.set_menu_resolver (tutorial_resolver tutorial_last) in
+      Eliom_reference.Volatile.set current_version (Some stable_version_name);
+      lwt () = Wiki_menu.set_menu_resolver (tutorial_resolver tutorial_stable) in
       Wiki_dir.process_wikifile
         ~wiki:tutorial_wiki ~template:tutorial_template
         ~wb404:tutorial_wb404 ~wb403:tutorial_wb403
@@ -654,7 +648,7 @@ let tutorial_aux_service =
              (Eliom_parameter.suffix_const "files")
              (Eliom_parameter.all_suffix "file"))))
     (fun (version, ((), file)) () ->
-      set_current_version version;
+      Eliom_reference.Volatile.set current_version (Some version);
       lwt () = Wiki_menu.set_menu_resolver (tutorial_resolver version) in
       Wiki_dir.process_auxfile
         ~options:2678400
@@ -669,8 +663,8 @@ let tutorial_aux_default_service =
     ~get_params:
     (Eliom_parameter.suffix (Eliom_parameter.all_suffix "file"))
     (fun file () ->
-      set_current_version stable_version_name;
-      lwt () = Wiki_menu.set_menu_resolver (tutorial_resolver tutorial_last) in
+      Eliom_reference.Volatile.set current_version (Some stable_version_name);
+      lwt () = Wiki_menu.set_menu_resolver (tutorial_resolver tutorial_stable) in
       Wiki_dir.process_auxfile
         ~options:2678400
         ~wiki:tutorial_wiki ~template:tutorial_template
