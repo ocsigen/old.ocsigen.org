@@ -39,13 +39,13 @@ let projects = [
   [
    "dev"    , "manualTemplate", "intro", [], Some (2, "Dev"),
       Some [["server"];["client"]];
-   "2.0-dev", "manualTemplate", "intro", ["2.2.1";"2.1.1";"2.0.2";"2.0.1";"2.0"], Some (1, "Stable branch"),
+   "2.0-dev", "manualTemplate", "intro", ["2.2.2";"2.1.1";"2.0.2";"2.0.1";"2.0"], Some (1, "Stable branch"),
       Some [["server"];["client"]];
    "1.3-dev", "manualTemplate", "intro"   , ["1.3.4"], None, None;
    "1.2-dev", "manualTemplate", "intro"   , ["1.2.2"], None, None;
    "1.0-dev", "manualTemplate", "intro"   , ["1.1.0"], None, None;
   ],
-  "2.2.1", (* last stable version *)
+  "2.2.2", (* last stable version *)
   "manualUnknownVersion",
   303l, (* 404 wiki box *)
   303l; (* 403 wiki box FIXME *)
