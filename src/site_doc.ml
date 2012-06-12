@@ -152,9 +152,8 @@ let tutorial_id = 36
 let tutorial_template = "tutorialTemplate"
 let tutorial_default = "intro"
 
-let tutorial_last = "dev"
 let tutorial_stable = "stable"
-let tutorial_version = [tutorial_last; tutorial_stable]
+let tutorial_version = ["dev"; tutorial_stable; "2.2"; "2.0"]
 
 let tutorial_wb404 = Wiki_types.wikibox_of_sql 295l
 let tutorial_wb403 = Wiki_types.wikibox_of_sql 295l
@@ -698,6 +697,6 @@ let () =
           Eliom_service.preapply tutorial_aux_default_service file)
         ~aux_resolver:tutorial_aux_resolver
         ~versions:[version]
-        tutorial_last (* Last stable version *)
+        tutorial_stable (* Last stable version *)
         version) (* default branch name *)
     tutorial_version
