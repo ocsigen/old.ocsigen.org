@@ -39,7 +39,7 @@ let do_wikifile bi args c =
       let file = Ocsigen_local_files.resolve
           ~no_check_for:repository
           ~request:(Eliom_request_info.get_request ())
-          ~filename:(repository ^ "/" ^ filename) in
+          ~filename:(repository ^ "/" ^ filename) () in
       match file with
       | Ocsigen_local_files.RFile file ->
         Lwt_io.with_file ~mode:Lwt_io.input file

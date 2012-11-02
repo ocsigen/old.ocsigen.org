@@ -189,7 +189,7 @@ let wrap_flow5 name f = fun bi args contents ->
 
 (** Contexte des services et des extensions. *)
 
-let current_version = Eliom_reference.Volatile.eref ~scope:Eliom_common.request None
+let current_version = Eliom_reference.Volatile.eref ~scope:Eliom_common.request_scope None
 
 let stable_version_name = "" (* internal version number for the last stable version *)
 
@@ -528,21 +528,21 @@ let register_project_data (id, branches, last_stable, template_404, wb404, wb403
         else
           Lwt.fail Eliom_common.Eliom_404) in
 
-  let manual_resolver project ?default branch =
+  let manual_resolver project ?default branch file =
     let manual_dir =
       String.concat "/" (manual_wiki_dir :: project @ [ branch ; "src" ]) in
-    Wiki_dir.resolve_file_in_dir ?default ~suffix:".wiki" manual_dir
+    Wiki_dir.resolve_file_in_dir ?default ~suffix:".wiki" manual_dir file ()
 
-  and aux_resolver project branch =
+  and aux_resolver project branch file =
     let aux_dir =
       String.concat "/" (manual_wiki_dir :: project @ [ branch ; "files" ]) in
-    Wiki_dir.resolve_file_in_dir aux_dir
+    Wiki_dir.resolve_file_in_dir aux_dir file ()
 
   and api_resolver project version file =
     let api_dir =
       String.concat "/" (api_wiki_dir :: project @ [ version ]) in
     let file = if file = [] then ["index"] else file in
-    Wiki_dir.resolve_file_in_dir ~default:"index" ~suffix:".wiki" api_dir file in
+    Wiki_dir.resolve_file_in_dir ~default:"index" ~suffix:".wiki" api_dir file () in
 
   let register_branch wiki project
       (branch, template, default, versions, title, subprojects) =
@@ -598,11 +598,11 @@ let tutorial_path =
 
 let tutorial_path = Lwt_unix.run tutorial_path
 
-let tutorial_resolver v =
-  Wiki_dir.resolve_file_in_dir ~default:tutorial_default ~suffix:".wiki" (tutorial_dir v)
+let tutorial_resolver v file =
+  Wiki_dir.resolve_file_in_dir ~default:tutorial_default ~suffix:".wiki" (tutorial_dir v) file ()
 
 let tutorial_aux_resolver v f =
-  Wiki_dir.resolve_file_in_dir (tutorial_aux_dir v) f
+  Wiki_dir.resolve_file_in_dir (tutorial_aux_dir v) f ()
 
 let tutorial_service =
   Ocsimore_appl.register_service
@@ -614,7 +614,7 @@ let tutorial_service =
           (Eliom_parameter.string "version")
           (Eliom_parameter.all_suffix "file")))
     (fun (version, file) () ->
-      debug "tutorial_service %S" (String.concat "/" file);
+      Eliom_lib.debug "tutorial_service %S" (String.concat "/" file);
       Eliom_reference.Volatile.set current_version (Some version);
       lwt () = Wiki_menu.set_menu_resolver (tutorial_resolver version) in
       Wiki_dir.process_wikifile
@@ -630,7 +630,7 @@ let tutorial_default_service =
     (Eliom_parameter.suffix
        (Eliom_parameter.all_suffix "file"))
     (fun file () ->
-      debug "tutorial_default_service %S" (String.concat "/" file);
+      Eliom_lib.debug "tutorial_default_service %S" (String.concat "/" file);
       Eliom_reference.Volatile.set current_version (Some stable_version_name);
       lwt () = Wiki_menu.set_menu_resolver (tutorial_resolver tutorial_stable) in
       Wiki_dir.process_wikifile
@@ -650,7 +650,7 @@ let tutorial_aux_service =
              (Eliom_parameter.suffix_const "files")
              (Eliom_parameter.all_suffix "file"))))
     (fun (version, ((), file)) () ->
-      debug "tutorial_aux_service %S" (String.concat "/" file);
+      Eliom_lib.debug "tutorial_aux_service %S" (String.concat "/" file);
       Eliom_reference.Volatile.set current_version (Some version);
       lwt () = Wiki_menu.set_menu_resolver (tutorial_resolver version) in
       Wiki_dir.process_auxfile
@@ -666,7 +666,7 @@ let tutorial_aux_default_service =
     ~get_params:
     (Eliom_parameter.suffix (Eliom_parameter.all_suffix "file"))
     (fun file () ->
-      debug "tutorial_aux_default_service %S" (String.concat "/" file);
+      Eliom_lib.debug "tutorial_aux_default_service %S" (String.concat "/" file);
       Eliom_reference.Volatile.set current_version (Some stable_version_name);
       lwt () = Wiki_menu.set_menu_resolver (tutorial_resolver tutorial_stable) in
       Wiki_dir.process_auxfile

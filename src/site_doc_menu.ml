@@ -45,7 +45,7 @@ let build_manual_tree bi branch =
 let build_doctree ?service bi version =
   build_api_trees bi version >>= fun api_tree ->
   build_manual_tree bi version >>= fun manual_tree ->
-  Lwt.return (Eliom_tools.Html5.hierarchical_menu_depth_first
+  Lwt.return (Eliom_tools.D.hierarchical_menu_depth_first
                 ~classe:["doctree"; "manualapitree"]
 		(Eliom_tools.Not_clickable, manual_tree @ api_tree)
 		~whole_tree:true
@@ -54,7 +54,7 @@ let build_doctree ?service bi version =
 
 let build_apitree ?service bi version =
   build_api_trees bi version >>= fun api_tree ->
-  Lwt.return (Eliom_tools.Html5.hierarchical_menu_depth_first
+  Lwt.return (Eliom_tools.D.hierarchical_menu_depth_first
                 ~classe:["doctree"; "apitree"]
 		(Eliom_tools.Not_clickable, api_tree)
 		~whole_tree:true
@@ -63,7 +63,7 @@ let build_apitree ?service bi version =
 
 let build_manualtree ?service bi version =
   build_manual_tree bi version >>= fun manual_tree ->
-  Lwt.return (Eliom_tools.Html5.hierarchical_menu_depth_first
+  Lwt.return (Eliom_tools.D.hierarchical_menu_depth_first
                 ~classe:["doctree"; "manualtree"]
 		(Eliom_tools.Not_clickable, manual_tree)
 		~whole_tree:true
