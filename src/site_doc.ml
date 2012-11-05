@@ -37,13 +37,8 @@ let projects = [
 
   eliom_id,
   [
-   "dev"    , "manualTemplate", "intro", [], Some (2, "Dev"),
-      Some [["server"];["client"]];
-   "2.0-dev", "manualTemplate", "intro", ["2.2.2";"2.1.1";"2.0.2";"2.0.1";"2.0"], Some (1, "Stable branch"),
-      Some [["server"];["client"]];
-   "1.3-dev", "manualTemplate", "intro"   , ["1.3.4"], None, None;
-   "1.2-dev", "manualTemplate", "intro"   , ["1.2.2"], None, None;
-   "1.0-dev", "manualTemplate", "intro"   , ["1.1.0"], None, None;
+    "dev"   , "manualTemplate", "intro", [], Some (1, "Development"), Some [["server"];["client"]];
+    "stable", "manualTemplate", "intro", ["2.2.2"; "2.0.2";"1.3.4";"1.2.2"], Some (1, "Releases"), Some [["server"];["client"]];
   ],
   "2.2.2", (* last stable version *)
   "manualUnknownVersion",
@@ -54,11 +49,8 @@ let projects = [
 
   server_id,
   [
-   "dev"    , "manualTemplate", "quickstart", ["2.1"], Some (1, "Stable branch"), None;
-   "1.3-dev", "manualTemplate", "intro"     , ["1.3.4"],
-     None, None;
-   "1.2-dev", "manualTemplate", "intro"     , ["1.2.2"], None, None;
-   "1.0-dev", "manualTemplate", "intro"     , ["1.1.0"], None, None;
+   "dev"   , "manualTemplate", "intro", [], Some (1, "Development"), None;
+   "stable", "manualTemplate", "intro", ["2.1"; "1.3.4"; "1.2.2"; "1.1.0"], Some (1, "Releases"), None;
   ],
   "2.1", (* last stable version *)
   "manualUnknownVersion",
@@ -69,8 +61,8 @@ let projects = [
 
   lwt_id,
   [
-   "dev", "manualTemplate", "manual", ["2.3.2";"2.3.1";"2.3.0";"2.2.1";"2.2.0"], Some (1, "Stable branch"), None;
-   "old", "manualTemplate", "manual", ["2.1.1";"2.1.0";"2.0.0";"1.1.0";"1.0.0"], None, None;
+   "dev", "manualTemplate", "manual", [], Some (1, "Development"), None;
+   "stable", "manualTemplate", "manual", ["2.3.2";"2.2.1";"2.0.0";"1.1.0";"1.0.0"], Some (1, "Releases"), None;
   ],
   "2.3.2", (* last stable version *)
   "manualUnknownVersion",
@@ -81,8 +73,8 @@ let projects = [
 
   js_of_ocaml_id,
   [
-   "dev", "manualTemplate", "overview", ["1.2"], Some (1, "Stable branch"), None;
-   "old", "manualTemplate", "overview", ["1.1.1"; "1.0.9";"1.0.8";"1.0.7";"1.0.6"], None , None;
+    "dev", "manualTemplate", "overview", [], Some (1, "Development"), None;
+    "stable", "manualTemplate", "overview", ["1.2"; "1.1.1"; "1.0.9"], Some (1, "Releases"), None;
   ],
   "1.2", (* last stable version *)
   "manualUnknownVersion",
@@ -93,7 +85,7 @@ let projects = [
 
   oclosure_id,
   [
-  "dev", "manualTemplate", "intro", [], Some (1, "Development branch"), None;
+  "dev", "manualTemplate", "intro", [], Some (1, "Development"), None;
   ],
   "dev", (* last stable version*)
   "manualUnknownVersion",
@@ -104,7 +96,7 @@ let projects = [
 
   ocsimore_id,
   [
-  "dev", "manualTemplate", "intro", [], Some (1, "Development branch"), None;
+  "dev", "manualTemplate", "intro", [], Some (1, "Development"), None;
   ],
   "dev", (* last stable version*)
   "manualUnknownVersion",
@@ -115,7 +107,7 @@ let projects = [
 
   obrowser_id,
   [
-  "dev", "manualTemplate", "intro", [], Some (1, "Development branch"), None;
+  "dev", "manualTemplate", "intro", [], Some (1, "Development"), None;
   ],
   "dev", (* last stable version*)
   "manualUnknownVersion",
@@ -126,7 +118,8 @@ let projects = [
 
   tyxml_id,
   [
-  "dev", "manualTemplate", "intro", ["2.1"; "2.0.1";"2.0"], Some (1, "Stable branch"), None;
+    "dev", "manualTemplate", "intro", [], Some (1, "Development"), None;
+    "stable", "manualTemplate", "intro", ["2.1"; "2.0.1";"2.0"], Some (1, "Releases"), None;
   ],
   "2.1",
   "manualUnknownVersion",
@@ -137,9 +130,10 @@ let projects = [
 
   macaque_id,
   [
-  "dev", "manualTemplate", "intro", [], Some (1, "Development branch"), None;
+    "dev", "manualTemplate", "intro", [], Some (1, "Development"), None;
+    "stable", "manualTemplate", "intro", ["0.6"], Some (1, "Releases"), None;
   ],
-  "dev", (* last stable version *)
+  "0.6", (* last stable version *)
   "manualUnknownVersion",
   346l, (* 404 wiki box *)
   346l; (* 403 wiki box FIXME *)
