@@ -4,5 +4,12 @@ _server/src/site_doc.cmo:
 _server/src/site_doc.cmx:
 _server/src/site_doc_link.cmo: _server/src/site_doc.cmo
 _server/src/site_doc_link.cmx: _server/src/site_doc.cmx
+_server/src/site_doc_menu.cmo: _server/src/site_doc_menu.type_mli
+_server/src/site_doc_menu.cmx: _server/src/site_doc_menu.type_mli
 _server/src/site_doc_menu.cmo: _server/src/site_doc_link.cmo _server/src/site_doc.cmo
 _server/src/site_doc_menu.cmx: _server/src/site_doc_link.cmx _server/src/site_doc.cmx
+_server/src/site_doc_menu.type_mli: _server/src/site_doc_link.cmo _server/src/site_doc.cmo
+_client/src/site_doc_menu.cmo: _server/src/site_doc_menu.type_mli
+_client/src/site_doc_menu.cmx: _server/src/site_doc_menu.type_mli
+_client/src/site_doc_menu.cmo:
+_client/src/site_doc_menu.cmx:

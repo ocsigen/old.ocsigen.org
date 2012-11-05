@@ -18,7 +18,9 @@
       <store dir="%%SRC%%/local/var/lib/ocsidbm/"/>
     </extension>
 
-    <extension findlib-package="ocsimore"/>
+    <extension findlib-package="ocsimore">
+      <internals application-name="site"/>
+    </extension>
     <extension findlib-package="ocsimore.wiki"/>
     <extension findlib-package="ocsimore.forum"/>
 

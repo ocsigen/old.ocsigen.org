@@ -249,4 +249,3 @@ let () =
     ~reduced:false
     ~name:"client-server-switch"
     { Wiki_syntax.fpp = do_client_server_switch }
-

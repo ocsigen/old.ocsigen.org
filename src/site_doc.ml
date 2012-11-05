@@ -37,6 +37,8 @@ let projects = [
 
   (* Those datas should be in database (Ocsforge ??) *)
 
+  (* Branches share the manual *)
+
   (** Eliom *)
 
 (* (branch name,
@@ -50,8 +52,13 @@ let projects = [
 
   eliom_id,
   [
-    "dev"   , "manualTemplate", "intro", [], Some (1, "Development"), Some [["server"];["client"]];
-    "stable", "manualTemplate", "intro", ["2.2.2"; "2.0.2";"1.3.4";"1.2.2"], Some (1, "Releases"), Some [["server"];["client"]];
+   "dev"    , "manualTemplate", "intro", [], Some (2, "Development"), Some [["server"];["client"]];
+   "2.0-dev", "manualTemplate", "intro", ["2.2.2";"2.1.1";"2.0.2";"2.0.1";"2.0"],
+     Some (1, "Stable"), Some [["server"];["client"]];
+   "1.3-dev", "manualTemplate", "intro"   , ["1.3.4"], None, None;
+   "1.2-dev", "manualTemplate", "intro"   , ["1.2.2"], None, None;
+   "1.0-dev", "manualTemplate", "intro"   , ["1.1.0"], None, None;
+
   ],
   "2.2.2", (* last stable version *)
   "manualUnknownVersion",
@@ -62,8 +69,10 @@ let projects = [
 
   server_id,
   [
-   "dev"   , "manualTemplate", "intro", [], Some (1, "Development"), None;
-   "stable", "manualTemplate", "intro", ["2.1"; "1.3.4"; "1.2.2"; "1.1.0"], Some (1, "Releases"), None;
+    "dev"    , "manualTemplate", "quickstart", ["2.1"], Some (1, "Stable"), None;
+    "1.3-dev", "manualTemplate", "intro"     , ["1.3.4"], None, None;
+    "1.2-dev", "manualTemplate", "intro"     , ["1.2.2"], None, None;
+    "1.0-dev", "manualTemplate", "intro"     , ["1.1.0"], None, None;
   ],
   "2.1", (* last stable version *)
   "manualUnknownVersion",
@@ -74,8 +83,8 @@ let projects = [
 
   lwt_id,
   [
-   "dev", "manualTemplate", "manual", [], Some (1, "Development"), None;
-   "stable", "manualTemplate", "manual", ["2.3.2";"2.2.1";"2.0.0";"1.1.0";"1.0.0"], Some (1, "Releases"), None;
+    "dev", "manualTemplate", "manual", ["2.3.2";"2.3.1";"2.3.0";"2.2.1";"2.2.0"], Some (1, "Stable"), None;
+    "old", "manualTemplate", "manual", ["2.1.1";"2.1.0";"2.0.0";"1.1.0";"1.0.0"], None, None;
   ],
   "2.3.2", (* last stable version *)
   "manualUnknownVersion",
@@ -86,8 +95,8 @@ let projects = [
 
   js_of_ocaml_id,
   [
-    "dev", "manualTemplate", "overview", [], Some (1, "Development"), None;
-    "stable", "manualTemplate", "overview", ["1.2"; "1.1.1"; "1.0.9"], Some (1, "Releases"), None;
+    "dev", "manualTemplate", "overview", ["1.2"], Some (1, "Stable branch"), None;
+    "old", "manualTemplate", "overview", ["1.1.1"; "1.0.9";"1.0.8";"1.0.7";"1.0.6"], None , None;
   ],
   "1.2", (* last stable version *)
   "manualUnknownVersion",
@@ -98,7 +107,7 @@ let projects = [
 
   oclosure_id,
   [
-  "dev", "manualTemplate", "intro", [], Some (1, "Development"), None;
+    "dev", "manualTemplate", "intro", [], Some (1, "Development"), None;
   ],
   "dev", (* last stable version*)
   "manualUnknownVersion",
@@ -109,7 +118,7 @@ let projects = [
 
   ocsimore_id,
   [
-  "dev", "manualTemplate", "intro", [], Some (1, "Development"), None;
+    "dev", "manualTemplate", "intro", [], Some (1, "Development"), None;
   ],
   "dev", (* last stable version*)
   "manualUnknownVersion",
@@ -131,8 +140,7 @@ let projects = [
 
   tyxml_id,
   [
-    "dev", "manualTemplate", "intro", [], Some (1, "Development"), None;
-    "stable", "manualTemplate", "intro", ["2.1"; "2.0.1";"2.0"], Some (1, "Releases"), None;
+    "dev", "manualTemplate", "intro", ["2.1"; "2.0.1";"2.0"], Some (1, "Stable"), None;
   ],
   "2.1",
   "manualUnknownVersion",
@@ -221,6 +229,7 @@ type project = {
   }
 and version = {
     version: string;
+    snippet: string;
     branch: branch;
     manual_resolver: string list Wiki_dir.resolver;
     manual_service: string list -> wiki_service;
@@ -255,6 +264,7 @@ let find_project wiki =
 let version_404 project =
   let rec v = {
     version = "404";
+    snippet = "404";
     branch = { br_template = project.template_404; br_title = Some "404";
                br_order=0; br_name = "404"; br_version = v;
                br_versions = []; br_project = project; br_subprojects = []; };
@@ -279,7 +289,7 @@ let find_version (wiki, version) =
   | None -> get_last_version project
   | Some version ->
     try
-      List.find (fun v -> v.version = version) project.versions
+      List.find (fun v -> v.snippet = version) project.versions
     with
     | Not_found -> version_404 project
 
@@ -343,6 +353,7 @@ let register_branch ~wiki ~template
     br_subprojects = subprojects;
   } and version = {
     version = name;
+    snippet = name;
     branch = branch;
     manual_resolver = manual_resolver name;
     manual_service = (manual_service name :> string list -> wiki_service);
@@ -354,6 +365,7 @@ let register_branch ~wiki ~template
     api_menu = api_menu name;
   } and src_version = {
     version = src_name;
+    snippet = src_name;
     branch = branch;
     manual_resolver = manual_resolver src_name;
     manual_service = (manual_service src_name :> string list -> wiki_service);
@@ -370,6 +382,7 @@ let register_branch ~wiki ~template
   let add_version v =
     let v = {
       version = v;
+      snippet = v;
       branch = branch;
       manual_resolver = manual_resolver name;
       manual_service = (manual_service v :> string list -> wiki_service);
@@ -384,7 +397,8 @@ let register_branch ~wiki ~template
     project.versions <- insert_version v project.versions;
     if v.version = last_stable_version then begin
       let v = {
-        version = stable_version_name;
+        version = v.version;
+        snippet = stable_version_name;
         branch = branch;
         manual_resolver = manual_resolver name;
         manual_service = (default_manual_service :> string list -> wiki_service);

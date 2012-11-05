@@ -8,11 +8,14 @@ SERVER_FILES :=     \
   src/site_ocsimore.ml  \
   src/site_doc.ml       \
   src/site_doc_link.ml  \
-  src/site_doc_menu.ml  \
+  src/site_doc_menu.eliom
+
+CLIENT_FILES := src/site_doc_menu.eliom
 
 PORT := 8080
 
 SERVER_PACKAGE := extlib,ocsimore.wiki_site
+CLIENT_PACKAGE := ocsimore_client.site
 ELIOMCFLAGS := -I _server/src
 ELIOMOPTFLAGS := -I _server/src
 ELIOMDEPFLAGS_SERVER := -I src
@@ -43,7 +46,7 @@ local/var/www/static:
 	mkdir -p $@
 	#sh files/update-symlinks.sh
 	cd files/data && for f in $$(ls); do ln -s ../../../../files/data/$$f ../../local/var/www/static/; done
-	ln -s $$(ocamlfind query ocsimore)/ocsimore.js $@/
+
 local/var/www/ocsimore_static:
 	mkdir -p $(basename local/var/www)
 	ln -fs ../../../${OCSIMORE_STATIC} $@
@@ -83,5 +86,8 @@ install::
 	  ${OCSIMORE_STATIC}/* \
 	  ${INSTALL_DIR}/ocsimore_static
 	install -m 644 ${INSTALL_USER} \
-	  /opt/ocsigen/src/ocsimore/_build/src/site/client/ocsimore.js \
+	  local/var/www/static/site.css \
+	  ${INSTALL_DIR}/static
+	install -m 644 ${INSTALL_USER} \
+	  local/var/www/static/${APP_NAME}.js \
 	  ${INSTALL_DIR}/static
