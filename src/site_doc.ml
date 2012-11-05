@@ -3,8 +3,21 @@
 
 open Eliom_content
 
-let manual_wiki_dir = "/var/www/data/manualwiki"
-let api_wiki_dir    = "/var/www/data/apiwiki"
+let manual_wiki_dir = ref "/var/www/data/manualwiki"
+let api_wiki_dir    = ref "/var/www/data/apiwiki"
+
+let () =
+  Eliom_config.parse_config
+    Ocsigen_extensions.Configuration.([
+      element ~name:"manual-wiki"
+        ~attributes:[ attribute ~name:"dir" (fun dir -> manual_wiki_dir := dir) ] ();
+      element ~name:"api-wiki"
+        ~attributes:[ attribute ~name:"dir" (fun dir -> api_wiki_dir := dir) ] ();
+    ]);
+  Printf.printf "Manual wiki directory: %s\n%!" !manual_wiki_dir;
+  Printf.printf "API wiki directory: %s\n%!" !api_wiki_dir;
+  ()
+
 
 (** Documentation des projets. *)
 
@@ -30,7 +43,7 @@ let projects = [
     template page,
     default page,
     version list,
-    long branch name (only if we want a special entry in the menu) 
+    long branch name (only if we want a special entry in the menu)
       and order of appearance in menu,
     subdirectories for API doc (optional, for example Eliom client API and server API))
 *)
@@ -524,17 +537,17 @@ let register_project_data (id, branches, last_stable, template_404, wb404, wb403
 
   let manual_resolver project ?default branch file =
     let manual_dir =
-      String.concat "/" (manual_wiki_dir :: project @ [ branch ; "src" ]) in
+      String.concat "/" (!manual_wiki_dir :: project @ [ branch ; "src" ]) in
     Wiki_dir.resolve_file_in_dir ?default ~suffix:".wiki" manual_dir file ()
 
   and aux_resolver project branch file =
     let aux_dir =
-      String.concat "/" (manual_wiki_dir :: project @ [ branch ; "files" ]) in
+      String.concat "/" (!manual_wiki_dir :: project @ [ branch ; "files" ]) in
     Wiki_dir.resolve_file_in_dir aux_dir file ()
 
   and api_resolver project version file =
     let api_dir =
-      String.concat "/" (api_wiki_dir :: project @ [ version ]) in
+      String.concat "/" (!api_wiki_dir :: project @ [ version ]) in
     let file = if file = [] then ["index"] else file in
     Wiki_dir.resolve_file_in_dir ~default:"index" ~suffix:".wiki" api_dir file () in
 
@@ -581,8 +594,8 @@ let () =
 (** Enregistrement du tutorial *)
 
 let tutorial_wiki      = Wiki_types.wiki_of_string (string_of_int tutorial_id)
-let tutorial_dir     v = manual_wiki_dir ^ "/tutorial/" ^ v ^ "/src"
-let tutorial_aux_dir v = manual_wiki_dir ^ "/tutorial/" ^ v ^ "/files"
+let tutorial_dir     v = !manual_wiki_dir ^ "/tutorial/" ^ v ^ "/src"
+let tutorial_aux_dir v = !manual_wiki_dir ^ "/tutorial/" ^ v ^ "/files"
 
 let tutorial_path =
   lwt info = Wiki_sql.get_wiki_info_by_id tutorial_wiki in

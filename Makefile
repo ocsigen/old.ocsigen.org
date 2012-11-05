@@ -1,6 +1,9 @@
 
 APP_NAME := site
 
+MANUAL_DIR := "/var/www/data/manualwiki"
+API_DIR := "/var/www/data/apiwiki"
+
 SERVER_FILES :=     \
   src/site_ocsimore.ml  \
   src/site_doc.ml       \
@@ -54,6 +57,8 @@ local/etc/${APP_NAME}.p${PORT}.conf: files/${APP_NAME}.conf.in
 	    -e "s|%%LIBDIR%%|${LIBDIR}|" \
 	    -e "s|%%JSDIR%%|${JSDIR}|" \
 	    -e "s|%%PORT%%|${PORT}|" \
+            -e "s|%%MANUAL_DIR%%|${MANUAL_DIR}|" \
+            -e "s|%%API_DIR%%|${API_DIR}|" \
 	    $< > $@
 
 run.local: local/etc/${APP_NAME}.p${PORT}.conf
