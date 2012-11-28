@@ -299,7 +299,7 @@ let do_docversion bi args _ =
            Html5.F.([
              div ~a:[a_class ["docversion"]] [
                label [pcdata "Version"];
-               select ~a:[a_onchange change_version]
+               Raw.select ~a:[a_onchange change_version]
                  (version_options project path)
              ]])))
 
