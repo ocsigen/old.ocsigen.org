@@ -83,7 +83,7 @@ let projects = [
 
   lwt_id,
   [
-    "dev", "manualTemplate", "manual", ["2.3.2";"2.3.1";"2.3.0";"2.2.1";"2.2.0"], Some (1, "Stable"), None;
+    "dev", "manualTemplate", "manual", ["2.4.2"; "2.4.1";"2.4.0";"2.3.2";"2.3.1";"2.3.0";"2.2.1";"2.2.0"], Some (1, "Stable"), None;
     "old", "manualTemplate", "manual", ["2.1.1";"2.1.0";"2.0.0";"1.1.0";"1.0.0"], None, None;
   ],
   "2.3.2", (* last stable version *)
