@@ -1,0 +1,12 @@
+*.local
+*~
+*.cmo
+*.cmx
+*.cmi
+*.cma
+*.cmxa
+*.cmxs
+*.a
+*.o
+local
+_server
