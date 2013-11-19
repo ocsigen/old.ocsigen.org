@@ -36,6 +36,7 @@ let ojwidgets_id = 76
 let eliomwidgets_id = 77
 let ojquery_id = 78
 let tuto_id = 79
+let goji_id = 80
 
 let projects = [
 
@@ -207,6 +208,17 @@ let projects = [
   "manualUnknownVersion",
   668l, (* 404 wiki box *)
   668l; (* 403 wiki box FIXME *)
+
+  (** Goji *)
+
+  goji_id,
+  [
+    "dev", "manualTemplate", "intro", [], Some (1, "Development"), None;
+  ],
+  "dev", (* last stable version *)
+  "manualUnknownVersion",
+  672l, (* 404 wiki box *)
+  672l; (* 403 wiki box FIXME *)
 
 ]
 
