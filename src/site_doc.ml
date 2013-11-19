@@ -32,6 +32,10 @@ let obrowser_id = 9
 let ocsforge_id = 24
 let tyxml_id = 66
 let macaque_id = 25
+let ojwidgets_id = 76
+let eliomwidgets_id = 77
+let ojquery_id = 78
+let tuto_id = 79
 
 let projects = [
 
@@ -159,6 +163,50 @@ let projects = [
   "manualUnknownVersion",
   346l, (* 404 wiki box *)
   346l; (* 403 wiki box FIXME *)
+
+  (** Ojwidgets *)
+
+  ojwidgets_id,
+  [
+    "dev", "manualTemplate", "intro", [], Some (1, "Development"), None;
+  ],
+  "dev", (* last stable version *)
+  "manualUnknownVersion",
+  660l, (* 404 wiki box *)
+  660l; (* 403 wiki box FIXME *)
+
+  (** Eliom-widgets *)
+
+  eliomwidgets_id,
+  [
+    "dev", "manualTemplate", "intro", [], Some (1, "Development"), None;
+  ],
+  "dev", (* last stable version *)
+  "manualUnknownVersion",
+  662l, (* 404 wiki box *)
+  662l; (* 403 wiki box FIXME *)
+
+  (** Ojquery *)
+
+  ojquery_id,
+  [
+    "dev", "manualTemplate", "intro", [], Some (1, "Development"), None;
+  ],
+  "dev", (* last stable version *)
+  "manualUnknownVersion",
+  664l, (* 404 wiki box *)
+  664l; (* 403 wiki box FIXME *)
+
+  (** Tutorial: trying to make it like any other project *)
+
+  tuto_id,
+  [
+    "dev", "manualTemplate", "intro", ["2.2"; "2.0"], Some (1, "Stable"), None;
+  ],
+  "2.2", (* last stable version *)
+  "manualUnknownVersion",
+  668l, (* 404 wiki box *)
+  668l; (* 403 wiki box FIXME *)
 
 ]
 
