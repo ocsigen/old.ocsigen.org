@@ -37,6 +37,7 @@ let eliomwidgets_id = 77
 let ojquery_id = 78
 let tuto_id = 79
 let goji_id = 80
+let eba_id = 81
 
 let projects = [
 
@@ -219,6 +220,17 @@ let projects = [
   "manualUnknownVersion",
   672l, (* 404 wiki box *)
   672l; (* 403 wiki box FIXME *)
+
+  (** Eliom base app *)
+
+  eba_id,
+  [
+    "dev", "manualTemplate", "intro", [], Some (1, "Development"), None;
+  ],
+  "dev", (* last stable version *)
+  "manualUnknownVersion",
+  676l, (* 404 wiki box *)
+  676l; (* 403 wiki box FIXME *)
 
 ]
 
