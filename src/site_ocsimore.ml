@@ -286,12 +286,11 @@ let do_google_search bi args xml =
        [ Html5.F.(get_form
            ~service:before_gsearch_service
            (fun tosearchfield ->
-             [p [string_input
-                   ~a:[a_placeholder "search ..."]
-                   ~name:tosearchfield
-                   ~input_type:`Text ();
-                 string_input ~input_type:`Submit ~value:"Search" ()
-		 ]
+             [string_input
+                 ~a:[a_placeholder "search ..."]
+                 ~name:tosearchfield
+                 ~input_type:`Text ();
+              string_input ~input_type:`Submit ~value:"Search" ()
 	     ]
 	   ))
        ])
