@@ -20,6 +20,7 @@ open Eliom_content
 open Eliom_lib
 open Lwt_ops
 
+(*****************************************************************************)
 (** Extension wikifile *)
 
 let repository_default    = "/var/www/data/darcs"
@@ -61,6 +62,7 @@ let _ =
   Wiki_syntax.register_interactive_simple_flow_extension
     ~name:"wikifile" ~reduced:false do_wikifile
 
+(*****************************************************************************)
 (** Extension script *)
 
 let do_script bi args c =
@@ -87,6 +89,7 @@ let _ =
   Wiki_syntax.register_simple_flow_extension
     ~name:"script" ~reduced:false do_script
 
+(*****************************************************************************)
 (** Extension atom *)
 (* Mmmmh. à revoir complètement *)
 
@@ -112,6 +115,8 @@ let _ =
   Wiki_syntax.register_simple_flow_extension ~name:"atom" ~reduced:false do_atom
 
 
+(*****************************************************************************)
+(** Extension wip *)
 (* Work in progress *)
 
 let get_inline bi args =
@@ -146,7 +151,8 @@ let _ =
   Wiki_syntax.register_wiki_phrasing_extension ~reduced:false ~name:"wip-inline" { Wiki_syntax.ppp = do_wip_inline }
 
 
-(* Concepts *)
+(*****************************************************************************)
+(** Extension Concepts *)
 
 let do_concepts bi args xml =
   `Flow5
@@ -190,7 +196,8 @@ let _ =
     ~name:"concept" ~reduced:false { Wiki_syntax.fpp = do_concept }
 
 
-(* Paragraph *)
+(*****************************************************************************)
+(* Extension paragraph *)
 
 let do_paragraph bi args xml =
   `Flow5
@@ -208,7 +215,10 @@ let _ =
     ~name:"paragraph"
     { Wiki_syntax.fpp = do_paragraph }
 
-(* Client/Server-Switch *)
+
+
+(*****************************************************************************)
+(** Extension Client/Server-Switch *)
 
 
 let do_client_server_switch bi args xml =
@@ -249,3 +259,43 @@ let () =
     ~reduced:false
     ~name:"client-server-switch"
     { Wiki_syntax.fpp = do_client_server_switch }
+
+
+(*****************************************************************************)
+(** Extension google search *)
+
+let gsearch_service =
+  Eliom_service.external_service ~prefix:"https://google.com" ~path:["search"]
+    ~get_params:(Eliom_parameter.string "q") ()
+
+let before_gsearch_service =
+  Eliom_service.coservice' ~name:"before_gsearch"
+    ~get_params:(Eliom_parameter.string "q") ()
+
+let _ =
+  Eliom_registration.Redirection.register
+    ~service:before_gsearch_service
+    (fun q () ->
+      Lwt.return
+        (Eliom_service.preapply
+	   ~service:gsearch_service (q^" site:ocsigen.org") ))
+
+let do_google_search bi args xml =
+  `Flow5
+    (Lwt.return
+       [ Html5.F.(get_form
+           ~service:before_gsearch_service
+           (fun tosearchfield ->
+             [p [string_input
+                   ~a:[a_placeholder "search ..."]
+                   ~name:tosearchfield
+                   ~input_type:`Text ();
+                 string_input ~input_type:`Submit ~value:"Search" ()
+		 ]
+	     ]
+	   ))
+       ])
+
+let _ =
+  Wiki_syntax.register_wiki_flow_extension
+    ~name:"googlesearch" ~reduced:false { Wiki_syntax.fpp = do_google_search }
