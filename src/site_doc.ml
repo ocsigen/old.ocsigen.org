@@ -125,7 +125,7 @@ let projects = [
 
   oclosure_id,
   [
-    "dev", "manualTemplate", "intro", [], Some (1, "Development"), None;
+    "dev", "manualTemplate", "intro", ["dev"], Some (1, "Development"), None;
   ],
   "dev", (* last stable version*)
   "manualUnknownVersion",
@@ -136,7 +136,7 @@ let projects = [
 
   ocsimore_id,
   [
-    "dev", "manualTemplate", "intro", [], Some (1, "Development"), None;
+    "dev", "manualTemplate", "intro", ["dev"], Some (1, "Development"), None;
   ],
   "dev", (* last stable version*)
   "manualUnknownVersion",
@@ -147,7 +147,7 @@ let projects = [
 
   obrowser_id,
   [
-  "dev", "manualTemplate", "intro", [], Some (1, "Development"), None;
+  "dev", "manualTemplate", "intro", ["dev"], Some (1, "Development"), None;
   ],
   "dev", (* last stable version*)
   "manualUnknownVersion",
@@ -158,7 +158,7 @@ let projects = [
 
   macaque_id,
   [
-    "dev", "manualTemplate", "intro", [], Some (1, "Development"), None;
+    "dev", "manualTemplate", "intro", ["dev"], Some (1, "Development"), None;
     "stable", "manualTemplate", "intro", ["0.6"], Some (1, "Releases"), None;
   ],
   "0.6", (* last stable version *)
@@ -170,7 +170,7 @@ let projects = [
 
   ojwidgets_id,
   [
-    "dev", "manualTemplate", "intro", [], Some (1, "Development"), None;
+    "dev", "manualTemplate", "intro", ["dev"], Some (1, "Development"), None;
   ],
   "dev", (* last stable version *)
   "manualUnknownVersion",
@@ -181,7 +181,7 @@ let projects = [
 
   eliomwidgets_id,
   [
-    "dev", "manualTemplate", "intro", [], Some (1, "Development"), None;
+    "dev", "manualTemplate", "intro", ["dev"], Some (1, "Development"), None;
   ],
   "dev", (* last stable version *)
   "manualUnknownVersion",
@@ -192,7 +192,7 @@ let projects = [
 
   ojquery_id,
   [
-    "dev", "manualTemplate", "intro", [], Some (1, "Development"), None;
+    "dev", "manualTemplate", "intro", ["dev"], Some (1, "Development"), None;
   ],
   "dev", (* last stable version *)
   "manualUnknownVersion",
@@ -214,7 +214,7 @@ let projects = [
 
   goji_id,
   [
-    "dev", "manualTemplate", "intro", [], Some (1, "Development"), None;
+    "dev", "manualTemplate", "intro", ["dev"], Some (1, "Development"), None;
   ],
   "dev", (* last stable version *)
   "manualUnknownVersion",
@@ -225,7 +225,7 @@ let projects = [
 
   eba_id,
   [
-    "dev", "manualTemplate", "intro", [], Some (1, "Development"), None;
+    "dev", "manualTemplate", "intro", ["dev"], Some (1, "Development"), Some [["server"];["client"]];
   ],
   "dev", (* last stable version *)
   "manualUnknownVersion",
