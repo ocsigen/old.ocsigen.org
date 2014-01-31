@@ -244,7 +244,7 @@ let tutorial_template = "tutorialTemplate"
 let tutorial_default = "intro"
 
 let tutorial_stable = "stable"
-let tutorial_version = ["dev"; tutorial_stable; "2.2"; "2.0"]
+let tutorial_version = ["dev"; tutorial_stable; "4.0"; "3.0"; "2.2"; "2.0"]
 
 let tutorial_wb404 = Wiki_types.wikibox_of_sql 295l
 let tutorial_wb403 = Wiki_types.wikibox_of_sql 295l
