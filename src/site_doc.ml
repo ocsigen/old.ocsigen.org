@@ -181,7 +181,7 @@ let projects = [
 
   eliomwidgets_id,
   [
-    "dev", "manualTemplate", "intro", ["dev"], Some (1, "Development"), None;
+    "dev", "manualTemplate", "intro", ["dev"], Some (1, "Development"), Some [["server"];["client"]];
   ],
   "dev", (* last stable version *)
   "manualUnknownVersion",
