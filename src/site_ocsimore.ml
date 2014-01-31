@@ -23,7 +23,7 @@ open Lwt_ops
 (*****************************************************************************)
 (** Extension wikifile *)
 
-let repository_default    = "/var/www/data/darcs"
+let repository_default    = "/var/www/data/git"
 let repository_restricted = "/var/www/data/restricted"
 
 let get_repository bi args =
