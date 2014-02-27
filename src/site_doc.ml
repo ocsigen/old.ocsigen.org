@@ -203,12 +203,12 @@ let projects = [
 
   tuto_id,
   [
-    "dev", "manualTemplate", "intro", ["dev"], None, None;
-    "4.0", "manualTemplate", "intro", ["4.0"], None, None;
-    "3.0", "manualTemplate", "intro", ["3.0"], None, None;
-    "2.0", "manualTemplate", "intro", ["2.2"; "2.0"], None, None;
+    "dev", "manualTemplate", "intro", ["dev"], Some (2, "Development"), None;
+    "3", "manualTemplate", "intro", ["3.0"], Some (3, "3.x"), None;
+    "4", "manualTemplate", "intro", ["4.0"], Some (1, "4.x"), None;
+    "2", "manualTemplate", "intro", ["2.2"; "2.0"], Some (4, "2.x"), None;
   ],
-  "3.0", (* last stable version *)
+  "4.0", (* last stable version *)
   "manualUnknownVersion",
   668l, (* 404 wiki box *)
   668l; (* 403 wiki box FIXME *)
