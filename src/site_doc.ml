@@ -76,7 +76,7 @@ let projects = [
 
   server_id,
   [
-    "dev"    , "manualTemplate", "quickstart", ["2.2";"2.1"], Some (1, "Stable"), None;
+    "dev"    , "manualTemplate", "quickstart", ["2.3";"2.2";"2.1"], Some (1, "Stable"), None;
     "1.3-dev", "manualTemplate", "intro"     , ["1.3.4"], None, None;
     "1.2-dev", "manualTemplate", "intro"     , ["1.2.2"], None, None;
     "1.0-dev", "manualTemplate", "intro"     , ["1.1.0"], None, None;
@@ -114,9 +114,9 @@ let projects = [
 
   tyxml_id,
   [
-    "dev", "manualTemplate", "intro", ["2.2";"2.1"; "2.0.1";"2.0"], Some (1, "Stable"), None;
+    "dev", "manualTemplate", "intro", ["3.0";"2.2";"2.1"; "2.0.1";"2.0"], Some (1, "Stable"), None;
   ],
-  "2.2",
+  "3.0",
   "manualUnknownVersion",
   346l, (* 404 wiki box *)
   346l; (* 403 wiki box FIXME *)
