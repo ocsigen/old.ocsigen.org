@@ -81,7 +81,7 @@ let projects = [
     "1.2-dev", "manualTemplate", "intro"     , ["1.2.2"], None, None;
     "1.0-dev", "manualTemplate", "intro"     , ["1.1.0"], None, None;
   ],
-  "2.2", (* last stable version *)
+  "2.3", (* last stable version *)
   "manualUnknownVersion",
   311l, (* 404 wiki box *)
   311l; (* 403 wiki box FIXME *)
