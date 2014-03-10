@@ -47,10 +47,10 @@ let projects = [
 
   (** Eliom *)
 
-(* (branch name,
+(* (branch name, (corresponds to the manual directory)
     template page,
     default page,
-    version list,
+    version list,  (for API repositories)
     long branch name (only if we want a special entry in the menu)
       and order of appearance in menu,
     subdirectories for API doc (optional, for example Eliom client API and server API))
