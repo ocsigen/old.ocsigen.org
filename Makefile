@@ -1,4 +1,3 @@
-
 APP_NAME := site
 
 MANUAL_DIR := "/var/www/data/manualwiki"
@@ -80,7 +79,7 @@ install::
 	cd files/data && \
 	  find ! \( -type d -or -type l \) -exec install -D -m 664 ${INSTALL_USER} {} ${INSTALL_DIR}/static/{} \;
 	cd files/data && \
-	  sudo -u www-data find -type l -exec cp -d {} ${INSTALL_DIR}/static/{} \;
+	  find -type l -exec cp -d {} ${INSTALL_DIR}/static/{} \;
 	install -d -m 775 ${INSTALL_USER} ${INSTALL_DIR}/ocsimore_static
 	install -m 664 ${INSTALL_USER} \
 	  ${OCSIMORE_STATIC}/* \
