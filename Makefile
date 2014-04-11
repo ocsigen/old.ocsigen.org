@@ -84,9 +84,9 @@ install::
 	install -m 664 ${INSTALL_USER} \
 	  ${OCSIMORE_STATIC}/* \
 	  ${INSTALL_DIR}/ocsimore_static
-	install -m 644 ${INSTALL_USER} \
-	  local/var/www/static/site.css \
-	  ${INSTALL_DIR}/static
+#	install -m 644 ${INSTALL_USER} \
+#	  local/var/www/static/site.css \
+#	  ${INSTALL_DIR}/static
 	install -m 644 ${INSTALL_USER} \
 	  local/var/www/static/${APP_NAME}.js \
 	  ${INSTALL_DIR}/static
