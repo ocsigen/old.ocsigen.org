@@ -19,7 +19,7 @@ ELIOMCFLAGS := -I _server/src
 ELIOMOPTFLAGS := -I _server/src
 ELIOMDEPFLAGS_SERVER := -I src
 
-OCSIMORE_STATIC := ../ocsimore/local/var/www/static/
+OCSIMORE_STATIC := $(shell opam config var share)/ocsimore/static/
 
 ###
 
