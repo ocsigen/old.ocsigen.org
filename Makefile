@@ -1,4 +1,3 @@
-
 APP_NAME := site
 
 MANUAL_DIR := "/var/www/data/manualwiki"
@@ -20,7 +19,7 @@ ELIOMCFLAGS := -I _server/src
 ELIOMOPTFLAGS := -I _server/src
 ELIOMDEPFLAGS_SERVER := -I src
 
-OCSIMORE_STATIC := ../ocsimore/local/var/www/static/
+OCSIMORE_STATIC := $(shell opam config var share)/ocsimore/static/
 
 ###
 
@@ -80,14 +79,14 @@ install::
 	cd files/data && \
 	  find ! \( -type d -or -type l \) -exec install -D -m 664 ${INSTALL_USER} {} ${INSTALL_DIR}/static/{} \;
 	cd files/data && \
-	  sudo -u www-data find -type l -exec cp -d {} ${INSTALL_DIR}/static/{} \;
+	  find -type l -exec cp -d {} ${INSTALL_DIR}/static/{} \;
 	install -d -m 775 ${INSTALL_USER} ${INSTALL_DIR}/ocsimore_static
 	install -m 664 ${INSTALL_USER} \
 	  ${OCSIMORE_STATIC}/* \
 	  ${INSTALL_DIR}/ocsimore_static
-	install -m 644 ${INSTALL_USER} \
-	  local/var/www/static/site.css \
-	  ${INSTALL_DIR}/static
+#	install -m 644 ${INSTALL_USER} \
+#	  local/var/www/static/site.css \
+#	  ${INSTALL_DIR}/static
 	install -m 644 ${INSTALL_USER} \
 	  local/var/www/static/${APP_NAME}.js \
 	  ${INSTALL_DIR}/static

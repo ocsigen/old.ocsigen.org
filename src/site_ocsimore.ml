@@ -91,7 +91,7 @@ let _ =
 
 (*****************************************************************************)
 (** Extension atom *)
-(* Mmmmh. à revoir complètement *)
+(* Mmmmh. ï¿½ revoir complï¿½tement *)
 
 let atom_header =
   Page_site.Header.create_header
@@ -269,7 +269,7 @@ let gsearch_service =
     ~get_params:(Eliom_parameter.string "q") ()
 
 let before_gsearch_service =
-  Eliom_service.coservice' ~name:"before_gsearch"
+  Eliom_service.App.coservice' ~name:"before_gsearch"
     ~get_params:(Eliom_parameter.string "q") ()
 
 let _ =

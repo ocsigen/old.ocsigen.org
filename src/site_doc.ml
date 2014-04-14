@@ -1,4 +1,3 @@
-
 (** ... *)
 
 open Eliom_content
@@ -102,10 +101,10 @@ let projects = [
 
   js_of_ocaml_id,
   [
-    "dev", "manualTemplate", "overview", ["1.4"], Some (1, "Stable branch"), None;
-    "old", "manualTemplate", "overview", ["1.3"; "1.2";"1.1.1"; "1.0.9"], None , None;
+    "dev", "manualTemplate", "overview", ["2.0"], Some (1, "Stable branch"), None;
+    "old", "manualTemplate", "overview", ["1.4"; "1.3"; "1.2";"1.1.1"; "1.0.9"], None , None;
   ],
-  "1.4", (* last stable version *)
+  "2.0", (* last stable version *)
   "manualUnknownVersion",
   322l, (* 404 wiki box *)
   322l; (* 403 wiki box FIXME *)
