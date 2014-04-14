@@ -265,7 +265,7 @@ let () =
 (** Extension google search *)
 
 let gsearch_service =
-  Eliom_service.external_service ~prefix:"https://google.com" ~path:["search"]
+  Eliom_service.Http.external_service ~prefix:"https://google.com" ~path:["search"]
     ~get_params:(Eliom_parameter.string "q") ()
 
 let before_gsearch_service =
