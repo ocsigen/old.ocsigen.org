@@ -5,9 +5,6 @@
   open Eliom_lib.Lwt_ops
 }}
 
-{client{
-  let _link = Ocsimore._link
-}}
 
 let register name f =
   Wiki_syntax.register_interactive_simple_flow_extension
