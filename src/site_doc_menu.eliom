@@ -275,7 +275,7 @@ let version_options project (prefix, current_version, manual_api, rest) =
 let do_docversion bi args _ =
   let change_version = {{
     fun ev ->
-      Js.Optdef.iter (ev##currentTarget) (fun target ->
+      Js.Opt.iter (ev##currentTarget) (fun target ->
         Js.Opt.iter (Dom_html.CoerceTo.select target) (fun select ->
           Js.Opt.iter (select##options##item(select##selectedIndex)) (fun option ->
             try
