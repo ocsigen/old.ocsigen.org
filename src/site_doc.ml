@@ -58,7 +58,8 @@ let projects = [
   eliom_id,
   [
    "dev"    , "manualTemplate", "intro", [], Some (2, "Development"), Some [["server"];["client"]];
-   "eliom-3", "manualTemplate", "intro", ["3.0"], Some (1, "Stable"), Some [["server"];["client"]];
+   "4.0", "manualTemplate", "intro", ["4.0"], Some (1, "Stable"), Some [["server"];["client"]];
+   "eliom-3", "manualTemplate", "intro", ["3.0"], None, Some [["server"];["client"]];
    "2.0-dev", "manualTemplate", "intro", ["2.2.2";"2.1.1";"2.0.2";"2.0.1";"2.0"],
      Some (1, "Old stable"), Some [["server"];["client"]];
    "1.3-dev", "manualTemplate", "intro", ["1.3.4"], None, None;
@@ -66,7 +67,7 @@ let projects = [
    "1.0-dev", "manualTemplate", "intro", ["1.1.0"], None, None;
 
   ],
-  "3.0", (* last stable version *)
+  "4.0", (* last stable version *)
   "manualUnknownVersion",
   303l, (* 404 wiki box *)
   303l; (* 403 wiki box FIXME *)
@@ -285,8 +286,8 @@ let stable_version_name = "" (* internal version number for the last stable vers
 
 let guess_version () =
   match Eliom_reference.Volatile.get current_version with
-    | Some v -> v
-    | None -> stable_version_name
+  | Some v -> v
+  | None -> stable_version_name
 
 type wiki_service =
     (unit, unit, Eliom_service.get_service_kind, [ `WithoutSuffix ],
