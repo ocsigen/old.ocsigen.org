@@ -11,7 +11,7 @@
     <charset>utf-8</charset>
 
     <debugmode/>
-
+    <extension findlib-package="yojson"/>
     <extension findlib-package="ocsigenserver.ext.staticmod"/>
     <extension findlib-package="ocsigenserver.ext.accesscontrol"/>
     <extension findlib-package="ocsigenserver.ext.ocsipersist-dbm">
@@ -37,8 +37,7 @@
       <eliom findlib-package="ocsimore.forum_site" />
       <eliom findlib-package="ocsforge" />
       <eliom module="%%SRC%%/%%LIBDIR%%/%%APPNAME%%.cma">
-        <manual-wiki dir="%%MANUAL_DIR%%"/>
-        <api-wiki dir="%%API_DIR%%"/>
+        <data-wiki dir="%%DATA_DIR%%"/>
       </eliom>
     </host>
 

@@ -1,9 +1,10 @@
 APP_NAME := site
 
-MANUAL_DIR := "/var/www/data/manualwiki"
-API_DIR := "/var/www/data/apiwiki"
+DATA_DIR := "/var/www/data/git/ocsigen.org-data"
 
 SERVER_FILES :=     \
+	src/version.ml        \
+	src/site_projects.ml  \
   src/site_ocsimore.ml  \
   src/site_doc.ml       \
   src/site_doc_link.ml  \
@@ -13,7 +14,7 @@ CLIENT_FILES := src/site_doc_menu.eliom
 
 PORT := 8080
 
-SERVER_PACKAGE := extlib,ocsimore.wiki_site
+SERVER_PACKAGE := extlib,ocsimore.wiki_site,yojson
 CLIENT_PACKAGE := ocsimore_client.site
 ELIOMCFLAGS := -I _server/src
 ELIOMOPTFLAGS := -I _server/src
@@ -59,8 +60,7 @@ local/etc/${APP_NAME}.p${PORT}.conf: files/${APP_NAME}.conf.in
 	    -e "s|%%LIBDIR%%|${LIBDIR}|" \
 	    -e "s|%%JSDIR%%|${JSDIR}|" \
 	    -e "s|%%PORT%%|${PORT}|" \
-            -e "s|%%MANUAL_DIR%%|${MANUAL_DIR}|" \
-            -e "s|%%API_DIR%%|${API_DIR}|" \
+	    -e "s|%%DATA_DIR%%|${DATA_DIR}|" \
 	    $< > $@
 
 run.local: local/etc/${APP_NAME}.p${PORT}.conf
