@@ -151,7 +151,7 @@ let get_subproject bi version args =
   Lwt.return
     (try String.split '/' (List.assoc "subproject" args)
      with Not_found ->
-       match version.Site_doc.branch.Site_doc.br_subprojects with
+       match version.Site_doc.subdir with
 	 | [] -> []
 	 | x :: _ -> x)
 
@@ -219,7 +219,7 @@ let do_manual_link bi args contents =
       ~sp:bi.Wiki_widgets_interface.bi_sp); *)
 
   (* Build URL *)
-  let doc_class = "ocsforge_doclink_" ^ version.Site_doc.branch.Site_doc.br_project.Site_doc.path in
+  let doc_class = "ocsforge_doclink_" ^ version.Site_doc.project.Site_doc.path in
 
   let a =
     Html5.D.a
@@ -247,7 +247,7 @@ let () =
     dans le dépôt darcs de la documentation. Si le 'contents' de
     l'extension est vide, le corps du lien est le nom du fichier. *)
 
-let do_aux_link bi args contents =
+let do_files_link bi args contents =
 
   (* Get arguments *)
   lwt src = get_src bi args in
@@ -255,7 +255,7 @@ let do_aux_link bi args contents =
   lwt fragment = get_opt_fragment bi args  in
 
   (* Check file existence *)
-  (*  ignore(version.Site_doc.aux_resolver (Neturl.split_path src)
+  (*  ignore(version.Site_doc.files_resolver (Neturl.split_path src)
 	   ~sp:bi.Wiki_widgets_interface.bi_sp); *)
 
   (* Parse contents *)
@@ -268,17 +268,17 @@ let do_aux_link bi args contents =
 	contents in
 
   (* Build URL *)
-  let doc_class = "ocsforge_doclink_" ^ version.Site_doc.branch.Site_doc.br_project.Site_doc.path in
+  let doc_class = "ocsforge_doclink_" ^ version.Site_doc.project.Site_doc.path in
   let a =
     Html5.D.a
       ~a:[Html5.F.a_class [doc_class]]
-      ~service:(version.Site_doc.aux_service (Neturl.split_path src))
+      ~service:(version.Site_doc.files_service (Neturl.split_path src))
       ?fragment contents	() in
   Lwt.return [a]
 
-let () = register "a_file" do_aux_link
+let () = register "a_file" do_files_link
 
-let do_aux_img bi args contents =
+let do_files_img bi args contents =
 
   (* Get arguments *)
   lwt src = get_src bi args in
@@ -286,7 +286,7 @@ let do_aux_img bi args contents =
   lwt fragment = get_opt_fragment bi args in
 
   (* Check file existence *)
-  (*  ignore(version.Site_doc.aux_resolver (Neturl.split_path src)
+  (*  ignore(version.Site_doc.files_resolver (Neturl.split_path src)
 	   ~sp:bi.Wiki_widgets_interface.bi_sp); *)
 
   (* Parse contents *)
@@ -297,12 +297,12 @@ let do_aux_img bi args contents =
   (* Build URL *)
   let src =
     Html5.D.make_uri
-      ~service:(version.Site_doc.aux_service (Neturl.split_path src)) () in
+      ~service:(version.Site_doc.files_service (Neturl.split_path src)) () in
   Lwt.return [ Html5.F.img ~src ~alt () ]
 
-let () = register "a_img" do_aux_img
+let () = register "a_img" do_files_img
 
-let do_aux_iframe bi args contents =
+let do_files_iframe bi args contents =
 
   (* Get arguments *)
   let attribs = Wiki_syntax.parse_common_attribs args in
@@ -314,13 +314,13 @@ let do_aux_iframe bi args contents =
   (* Build URL *)
   let src =
     Html5.D.make_uri
-      ~service:(version.Site_doc.aux_service (Neturl.split_path src)) () in
+      ~service:(version.Site_doc.files_service (Neturl.split_path src)) () in
   Lwt.return [ Html5.F.iframe
 		 ~a:( Html5.F.a_src src :: Html5.F.a_width width
                       :: Html5.F.a_height height :: attribs)
 		 [Html5.F.pcdata ""] ]
 
-let () = register "a_iframe" do_aux_iframe
+let () = register "a_iframe" do_files_iframe
 
 
 
@@ -445,7 +445,7 @@ let do_api_link prefix bi args contents =
 	   (* ~sp:bi.Wiki_widgets_interface.bi_sp); *)
 
   (* Build URL *)
-  let doc_class = "ocsforge_doclink_" ^ version.Site_doc.branch.Site_doc.br_project.Site_doc.path in
+  let doc_class = "ocsforge_doclink_" ^ version.Site_doc.project.Site_doc.path in
   let a =
     Html5.D.a
       ~a:[Html5.F.a_class [doc_class]; Html5.F.a_style "white-space: pre-line;"]
@@ -457,4 +457,3 @@ let do_api_link prefix bi args contents =
 let () = register "a_api" (do_api_link None)
 let () = register "a_api_type" (do_api_link (Some "type_"))
 let () = register "a_api_code" (do_api_link (Some "code_"))
-

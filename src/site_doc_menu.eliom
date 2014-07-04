@@ -13,10 +13,16 @@ let register name f =
 (** <<doctree [project="..."] [subproject="..."] [version="..."] >> *)
 
 let build_api_tree bi version file =
+  try_lwt
   Wiki_menu.build_tree_from_file bi
     ~create_service:(fun ?wiki file ->
       (version.Site_doc.api_service file :> Eliom_tools.get_page))
     ~file
+  with ee ->
+    Printf.printf "exc during api_tree %s %s\n%!" (Ocsigen_local_files.(match file with
+        | RFile s -> s
+        | RDir s -> s)) (Printexc.to_string ee);
+    raise Not_found
 
 let build_api_trees bi version =
   try_lwt
@@ -29,7 +35,7 @@ let build_api_trees bi version =
   | exc ->
     let msg =
       Format.sprintf "Can't read api menu (exception: %s)"
-	(Printexc.to_string exc) in
+	      (Printexc.to_string exc) in
     Lwt.fail (Site_doc.Error msg)
 
 let build_manual_tree bi branch =
@@ -101,60 +107,6 @@ let get_relative_path_in_wiki bi project service =
     (String.length prefix + 2)
     (String.length url - String.length prefix - 2)
 
-let append_version b bi level version title =
-  let title =
-    if title = Site_doc.stable_version_name
-    then Printf.sprintf "latest stable"
-    else title
-  in
-  let project = version.Site_doc.branch.Site_doc.br_project in
-  let wiki_id = Wiki_types.string_of_wiki project.Site_doc.wiki in
-  let manual = version.Site_doc.manual_service [""] in
-  let api = version.Site_doc.api_service [""] in
-  try
-    ignore (version.Site_doc.api_resolver ["index"]);
-    Format.bprintf b
-      ("%s[[wiki(%s):%s|%s]]\n" ^^
-       "=%s[[wiki(%s):%s|Manual]]\n" ^^
-       "=%s[[wiki(%s):%s|API Reference]]\n")
-      level wiki_id (get_relative_path_in_wiki bi project manual) title
-      level wiki_id (get_relative_path_in_wiki bi project manual)
-      level wiki_id (get_relative_path_in_wiki bi project api)
-  with
-  | _ ->
-      Format.bprintf b
-	"%s[[wiki(%s):%s|%s]]\n"
-	level wiki_id (get_relative_path_in_wiki bi project manual) title
-
-let build_version b bi level version =
-  append_version b bi level version version.Site_doc.version
-
-let build_versions b bi level ?last title versions =
-  if versions <> [] || last <> None then
-    let last_version =
-      match last with
-      | Some last -> last
-      | None -> List.hd versions in
-    let last_manual = last_version.Site_doc.manual_service [""] in
-    let project = last_version.Site_doc.branch.Site_doc.br_project in
-    let wiki_id = Wiki_types.string_of_wiki project.Site_doc.wiki in
-    Format.bprintf b
-      "%s[[wiki(%s):%s|%s]]\n"
-      level wiki_id (get_relative_path_in_wiki bi project last_manual) title;
-    (*match last with
-     | Some last -> append_version b bi (level^"=") last "darcs"
-     | None -> ()*)
-    List.iter (build_version b bi (level^"=")) versions
-
-let build_branch b bi level branch =
-  match branch.Site_doc.br_title with
-  | None -> ()
-  | Some title ->
-      build_versions b bi level
-	~last:branch.Site_doc.br_version
-	title
-	branch.Site_doc.br_versions
-
 let build_doc b bi level project =
   let wiki_id = Wiki_types.string_of_wiki project.Site_doc.wiki in
   let last_stable_version = Site_doc.get_last_version project in
@@ -162,7 +114,7 @@ let build_doc b bi level project =
   Format.bprintf b
     "%s[[wiki(%s):%s|Doc]]\n"
     level wiki_id (get_relative_path_in_wiki bi project last_stable_manual);
-  let version = Site_doc.(find_version (project.Site_doc.wiki, Some (guess_version ()))) in
+  let version = Site_doc.(find_version (project.wiki, Some (guess_version ()))) in
   let wiki_id = Wiki_types.string_of_wiki project.Site_doc.wiki in
   let manual = version.Site_doc.manual_service [""] in
   let api = version.Site_doc.api_service [""] in
@@ -218,19 +170,25 @@ let _ = register "docmenu" do_docmenu
       | [] -> None
       | ("manual"|"api" as ma) :: rest ->
         Some (List.rev prefix, None, ma, rest)
-      | "dev" :: ("manual" | "api" as ma) :: rest ->
-        Some (List.rev prefix, Some "dev", ma, rest)
-      | version :: (("manual" | "api" as ma) :: rest)
-        when List.exists (fun v -> version = v.Site_doc.version) project.Site_doc.versions ->
-        Some (List.rev prefix, Some version, ma, rest)
+      | "dev" :: (("manual" | "api" as ma) :: rest) ->
+        Some (List.rev prefix, Some Version.Dev, ma, rest)
+      | (version :: (("manual" | "api" as ma) :: rest)) as all ->
+        begin try
+            let version = Version.parse version in
+            if List.exists (fun v -> version = v.Site_doc.version) project.Site_doc.versions
+            then
+              Some (List.rev prefix, Some version, ma, rest)
+            else raise Not_found
+          with _ -> aux (List.hd all :: prefix) (List.tl all)
+        end
       | snippet :: rest -> aux (snippet :: prefix) rest
     in aux []
 }}
 
 let version_options project (prefix, current_version, manual_api, rest) =
   let open Html5.F in
-  let selected ?(default=false) name =
-    if (default && current_version == None) || current_version = Some name
+  let selected ?(default=false) v =
+    if (default && current_version == None) || current_version = Some v
     then [ a_selected `Selected ]
     else []
   in
@@ -238,39 +196,46 @@ let version_options project (prefix, current_version, manual_api, rest) =
     Html5.Custom_data.attrib version_path_custom_data
       (prefix @ Option.to_list version @ manual_api :: rest)
   in
-  let latest =
+  let latest,versions =
     match project.Site_doc.last_stable with
-      | None -> []
+      | None -> [],project.Site_doc.versions
       | Some last_stable ->
-        let name = last_stable.Site_doc.version in
+        let v = last_stable.Site_doc.version in
+        let versions = List.filter (fun v' -> v'.Site_doc.version <> v) project.Site_doc.versions in
         [option
-            ~a:(a_value "" :: version_path None :: selected ~default:true name)
-            (Printf.ksprintf pcdata "Latest stable (%s)" name)]
+            ~a:(a_value "" :: version_path None :: selected ~default:true v)
+            (Printf.ksprintf pcdata "Latest stable (%s)" (Version.to_string v))], versions
   in
   let dev =
     try
-      let opt =
-        let name = "dev" in
-        option ~a:(a_value name :: version_path (Some name) :: selected name)
-          (pcdata "Development")
-      in
-      Some opt
+      match project.Site_doc.dev_version with
+      | None -> None
+      | Some dev ->
+        let v = dev.Site_doc.version in
+        let name = Version.to_string v in
+        let opt = option ~a:(a_value name :: version_path (Some name) :: selected v)
+            (pcdata "Development") in
+        Some opt
     with Not_found -> None
   in
   let releases =
-    List.map
-      (fun version ->
-        let name = version.Site_doc.version in
-        option ~a:(a_value name :: version_path (Some name) :: selected name)
-          (pcdata (version.Site_doc.version)))
-      (List.filter
-         (fun v ->
-           v.Site_doc.version <> v.Site_doc.branch.Site_doc.br_name &&
-             v.Site_doc.version <> v.Site_doc.branch.Site_doc.br_name^"-src" &&
-             v.Site_doc.snippet <> Site_doc.stable_version_name)
-         project.Site_doc.versions)
+    let all = List.map
+        (fun version ->
+           let v = version.Site_doc.version in
+           let name = Version.to_string v in
+           Version.major v,
+           option ~a:(a_value name :: version_path (Some name) :: selected v) (pcdata name) ) versions in
+    let by_major = List.fold_right (fun (major,opt) acc ->
+        match acc with
+        | []-> [major,[opt]]
+        | (cmajor,l)::xs when cmajor = major -> (cmajor,(opt::l))::xs
+        | l -> (major,[opt])::l) all [] in
+    match by_major with
+    | [] -> []
+    | [_,l] -> [optgroup ~label:"Releases" l]
+    | groups -> List.map (fun (major,l) -> optgroup ~label:(Printf.sprintf "Releases: versions %s.*" major) l) groups
   in
-  latest @ Option.to_list dev @ [ optgroup ~label:"Releases" releases ]
+  latest @ Option.to_list dev @ releases
 
 let do_docversion bi args _ =
   let change_version = {{
@@ -310,7 +275,7 @@ let do_manual_api_link manual_or_api bi args content =
            | Some (prefix, version, _, _) ->
              String.concat "/"
                (List.map Url.encode
-                  (Option.to_list version @ [manual_or_api]))
+                  (Option.to_list (match version with None -> None | Some v -> Some (Version.to_string v)) @ [manual_or_api]))
            | None ->
              manual_or_api)
          (Option.get (fun () -> manual_or_api) content)
@@ -324,17 +289,3 @@ let _ =
     (do_manual_api_link "manual");
   Wiki_syntax.register_simple_extension Wiki_syntax.menu_parser "api-link"
     (do_manual_api_link "api")
-
-(* let build_version version : Wiki_menu.menu_item = *)
-  (* let manual = version.Site_doc.manual_service [""] in *)
-  (* let api = version.Site_doc.api_service "" in *)
-  (* {{ {: version.Site_doc.version :} }}, *)
-  (* Eliom_tools_common.Site_tree *)
-    (* (Eliom_tools_common.Main_page manual, *)
-     (* [{{ "Manual" }}, *)
-      (* Eliom_tools_common.Site_tree (Eliom_tools_common.Main_page manual, []); *)
-      (* {{ "API Reference" }}, *)
-      (* Eliom_tools_common.Site_tree (Eliom_tools_common.Main_page api, []) ]) *)
-
-(* let build_versions project : Wiki_menu.menu_item list = *)
-  (* List.map build_version project.version *)
