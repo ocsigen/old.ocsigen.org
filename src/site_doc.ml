@@ -394,7 +394,7 @@ let reload_list : (string * (unit -> unit)) list =
 
 let reload () =
   List.iter (fun (name,f) ->
-      Printf.printf "\nLoading versions for %s\n%!" name;
+      Printf.printf "loading updating versions for %s\n%!" name;
       f ()) reload_list
 
 let _ =
