@@ -1,4 +1,4 @@
-let wiki_dir = ref "/var/www/data/manualwiki"
+let wiki_dir = ref "/var/www/data/git/ocsigen.org-data"
 
 (** Documentation des projets. *)
 
