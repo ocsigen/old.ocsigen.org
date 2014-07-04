@@ -201,7 +201,7 @@ exception Dir
 
 
 
-let register_project_data p =
+let register_project_data p = try_lwt
 
   Printf.printf "registering project %s (wiki_id:%d)\n%!" p.Site_projects.name p.Site_projects.wiki_id;
 
@@ -385,6 +385,11 @@ let register_project_data p =
        project.versions <- [];
        let versions = Site_projects.read_versions p.Site_projects.name p in
        List.iter (register_version wiki path) versions))
+  with exc ->
+    Printf.printf "error while registering project %s. ignoring it. %s\n%!"
+      p.Site_projects.name (Printexc.to_string exc);
+    Lwt.return (    p.Site_projects.name, (fun () -> ()))
+
 
 let projects = Site_projects.read_projects ()
 
