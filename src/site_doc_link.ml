@@ -107,7 +107,7 @@ let get_project bi args =
   Site_doc.find_project
 
 let get_project_and_version bi args =
-  try
+  try_lwt
     (project_of_path (List.assoc "project" args)) >|= fun project ->
     let version = try Some (List.assoc "version" args) with Not_found -> None in
     (project, version)

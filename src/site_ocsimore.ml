@@ -159,9 +159,10 @@ let do_concepts bi args xml =
     (lwt xml = match xml with
       | Some c -> (c :> Html5_types.flow5 Html5.F.elt list Lwt.t)
       | None -> Lwt.return [] in
+     let a = Wiki_syntax.parse_common_attribs args in
      Lwt.return
        [ Html5.F.aside
-           ~a:[Html5.F.a_class ["concepts"]]
+           ~a:(Html5.F.a_class ["concepts"]::a)
            ( Html5.F.header [Html5.F.h5 [Html5.F.pcdata "Concepts"]]
              :: xml ) ])
 
@@ -182,9 +183,10 @@ let do_concept bi args xml =
       | Some c -> (c :> Html5_types.flow5 Html5.F.elt list Lwt.t)
       | None -> Lwt.return [] in
      let title = get_title bi args in
+     let a = Wiki_syntax.parse_common_attribs args in
      Lwt.return
        [ Html5.F.aside
-           ~a:[Html5.F.a_class ["concept"]]
+           ~a:(Html5.F.a_class ["concept"]::a)
            ( Html5.F.header [Html5.F.h5 [Html5.F.span
                                            ~a:[Html5.F.a_class ["concept_prefix"]]
                                            [Html5.F.pcdata "Concept: "];
@@ -204,9 +206,10 @@ let do_paragraph bi args xml =
     (lwt xml = match xml with
        | Some c -> (c :> _ Html5.F.elt list Lwt.t)
        | None -> Lwt.return [] in
+     let a = Wiki_syntax.parse_common_attribs args in
      Lwt.return
        [ Html5.F.div
-           ~a:[Html5.F.a_class ["paragraph"]]
+           ~a:(Html5.F.a_class ["paragraph"]::a)
           xml ])
 
 let _ =
