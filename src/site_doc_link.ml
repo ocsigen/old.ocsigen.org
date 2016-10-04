@@ -359,7 +359,7 @@ let parse_uid id =
 
 let parse_method id =
   match String.split '#' id with
-  | [id; mid] when not (is_capitalized id) && not (is_capitalized id) -> (id, mid)
+  | [id; mid] when not (is_capitalized id) && not (is_capitalized mid) -> (id, mid)
   | _ -> raise (Site_doc.Error (Printf.sprintf "invalid method name %S" id))
 
 let parse_contents bi args contents =
