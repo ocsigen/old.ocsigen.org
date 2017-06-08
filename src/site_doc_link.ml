@@ -358,9 +358,15 @@ let parse_uid id =
   | _ -> raise (Site_doc.Error (Printf.sprintf "invalid ocaml id %S" (String.concat "" id)))
 
 let parse_method id =
-  match String.split '#' id with
-  | [id; mid] when not (is_capitalized id) && not (is_capitalized mid) -> (id, mid)
-  | _ -> raise (Site_doc.Error (Printf.sprintf "invalid method name %S" id))
+  let id = String.concat "" id in
+  let fail () =
+    raise (Site_doc.Error (Printf.sprintf "invalid method name %S" id)) in
+  let sep_index = try String.rindex id '.' with Not_found -> fail () in
+  let cid = String.sub id 0 sep_index in
+  let mid =
+    String.sub id (sep_index + 1) (String.length id - (sep_index + 1)) in
+  if is_capitalized mid then fail ();
+  (cid, mid)
 
 let parse_contents bi args contents =
   match contents with
@@ -402,12 +408,12 @@ let parse_contents bi args contents =
 	  let path, id = parse_uid uid in
 	  path, `Exc id
       | "attribute":: lid | "attr":: lid ->
-	  let path, id = parse_lid lid in
-	  let id, did = parse_method id in
+	  let id, did = parse_method lid in
+	  let path, id = parse_lid [id] in
 	  path, `Attr (id, did)
       | "method":: lid ->
-	  let path, id = parse_lid lid in
-	  let id, mid = parse_method id in
+	  let id, mid = parse_method lid in
+	  let path, id = parse_lid [id] in
 	  path, `Method (id, mid)
       | "section":: lid ->
 	  let path, id = parse_lid lid in
